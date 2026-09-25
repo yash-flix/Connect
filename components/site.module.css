@@ -254,8 +254,10 @@
   border-bottom: 1px solid var(--ink);
 }
 
-.nowrap {
-  white-space: nowrap;
+@media (min-width: 560px) {
+  .nowrap {
+    white-space: nowrap;
+  }
 }
 
 .accent {
@@ -379,8 +381,9 @@
 
 .sheetHead {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 16px;
+  gap: 2px 16px;
   padding: 10px 14px;
   border-bottom: 1px solid var(--rule);
 }
@@ -1253,4 +1256,174 @@
 
 .preview .sheetBoard {
   padding: 20px 12px;
+}
+
+/* ---------- Mobile ---------- */
+.mobileMenu {
+  position: relative;
+}
+
+@media (min-width: 860px) {
+  .mobileMenu {
+    display: none;
+  }
+}
+
+.menuButton {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--card);
+  cursor: pointer;
+}
+
+.menuIcon,
+.menuIcon::before,
+.menuIcon::after {
+  display: block;
+  width: 14px;
+  height: 1px;
+  background: var(--ink);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.menuIcon {
+  position: relative;
+}
+
+.menuIcon::before,
+.menuIcon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.menuIcon::before { top: -4px; }
+.menuIcon::after { top: 4px; }
+
+.menuIcon[data-open="true"] {
+  background: transparent;
+}
+
+.menuIcon[data-open="true"]::before {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.menuIcon[data-open="true"]::after {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+.menuPanel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 12px);
+  width: min(260px, calc(100vw - 32px));
+  background: var(--card);
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  padding: 6px 16px;
+  animation: rise 0.25s ease both;
+}
+
+.menuPanel ol {
+  list-style: none;
+}
+
+.menuPanel li + li {
+  border-top: 1px solid var(--rule);
+}
+
+.menuPanel a {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 12px 0;
+  font-size: 16px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 859px) {
+  .navInner {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 999px) {
+  /* On narrow screens show the board first, so installs are visible. */
+  .preview {
+    order: -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero {
+    padding-top: 28px;
+  }
+  .heroSheet {
+    margin-bottom: 28px;
+  }
+  .display {
+    font-size: 42px;
+  }
+  .h2 {
+    font-size: 31px;
+  }
+  .lede {
+    font-size: 17px;
+  }
+  .head {
+    margin-bottom: 36px;
+  }
+  .ctaRow > a {
+    flex: 1 1 auto;
+  }
+  .sheetFoot .btnPrimary {
+    width: 100%;
+  }
+  .specRow dd {
+    font-size: 15px;
+  }
+  .faqItem summary {
+    font-size: 16.5px;
+  }
+  .faqItem p {
+    padding-right: 0;
+  }
+  .footerCta,
+  .footerCta .btnPrimary {
+    width: 100%;
+    max-width: none;
+  }
+  .tbTitle {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  /* Callouts are hidden on phones, so crop the space kept for them. */
+  .sheetBoard,
+  .preview .sheetBoard {
+    overflow: hidden;
+    padding: 4px 0 12px;
+  }
+  .sheetBoard > :first-child {
+    width: 124%;
+    max-width: none;
+    margin: -12% 0 -8% -6%;
+  }
+  .legend {
+    width: auto;
+    margin: 20px 12px 0 !important;
+  }
 }

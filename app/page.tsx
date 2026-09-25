@@ -5,6 +5,7 @@ import { BoardFigure } from "@/components/BoardFigure";
 import { Glyph, Mark, ModuleIcon } from "@/components/iso";
 import { Legend } from "@/components/Legend";
 import { Logo } from "@/components/Logo";
+import { MobileMenu } from "@/components/MobileMenu";
 import { agents, faqs, rules, steps } from "@/lib/content";
 import styles from "@/components/site.module.css";
 
@@ -25,6 +26,7 @@ export default function Home() {
           <a href="#early-access" className={styles.btnPrimary}>
             Early access
           </a>
+          <MobileMenu />
         </div>
       </header>
 
