@@ -1,27 +1,33 @@
 /*
- * Connect design tokens.
- * Warm cream editorial: whisper-weight display type, one violet accent,
- * 4px corners everywhere, no shadows, no gradients.
+ * Connect — technical drawing on warm paper.
+ * Ink linework, one moss accent, isometric modules.
  */
 :root {
-  --violet: #0007cb;
-  --carbon: #000000;
-  --ink: #111111;
-  --iron: #414141;
-  --graphite: #585858;
-  --smoke: #888888;
-  --ash: #a0a0a0;
-  --silver: #b8b8b8;
-  --hairline: #dedbd6;
-  --stone: #d3cec6;
-  --linen: #f1eee9;
-  --canvas: #faf9f6;
-  --white: #ffffff;
+  --paper: #f4f1ea;
+  --paper-2: #ece7dc;
+  --card: #faf8f3;
+  --rule: #d9d2c3;
+  --ink: #17160f;
+  --ink-2: #3f3c33;
+  --muted: #75705f;
+  --faint: #a39d8c;
+  --moss: #3f5a36;
+  --moss-tint: #dde5cc;
 
-  --radius: 4px;
-  --max: 1200px;
-  --gutter: clamp(16px, 4vw, 40px);
-  --section: clamp(64px, 9vw, 112px);
+  --iso-paper-top: #fbfaf6;
+  --iso-paper-front: #e8e3d6;
+  --iso-paper-side: #d6cfbe;
+  --iso-moss-top: #dde5cc;
+  --iso-moss-front: #bfcca6;
+  --iso-moss-side: #a3b487;
+  --iso-plate-top: #ece7dc;
+  --iso-plate-front: #dbd4c4;
+  --iso-plate-side: #c9c1ad;
+
+  --radius: 6px;
+  --max: 1240px;
+  --gutter: clamp(16px, 4.5vw, 56px);
+  --section: clamp(80px, 10vw, 136px);
 }
 
 * {
@@ -36,12 +42,11 @@ html {
 }
 
 body {
-  background: var(--canvas);
+  background: var(--paper);
   color: var(--ink);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: 16px;
-  line-height: 1.5;
-  letter-spacing: -0.01em;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -62,13 +67,13 @@ textarea {
 }
 
 ::selection {
-  background: var(--violet);
-  color: var(--white);
+  background: var(--moss);
+  color: var(--paper);
 }
 
 :focus-visible {
-  outline: 2px solid var(--violet);
-  outline-offset: 2px;
+  outline: 1.5px solid var(--ink);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {

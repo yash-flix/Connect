@@ -15,7 +15,7 @@ export function EarlyAccess() {
   if (sent) {
     return (
       <div className={styles.formDone} role="status">
-        <span className={styles.mono}>Received</span>
+        <span className={styles.code}>Received</span>
         <p>
           Thanks. We’ll reach out to map your lead-to-appointment workflow
           together.

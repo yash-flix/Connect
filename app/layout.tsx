@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { Inter_Tight, JetBrains_Mono, Newsreader } from "next/font/google";
+import { Inter, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 
-const sans = Inter_Tight({
+const sans = Inter({
   variable: "--font-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-});
-
-const mono = JetBrains_Mono({
-  variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
 });
@@ -17,21 +11,26 @@ const mono = JetBrains_Mono({
 const serif = Newsreader({
   variable: "--font-serif",
   subsets: ["latin"],
-  weight: ["300"],
-  style: ["normal", "italic"],
+  weight: ["300", "400"],
+});
+
+const mono = Geist_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
-  title: "Connect — AI agents for small service businesses",
+  title: "Connect — the front desk for businesses that don’t have one",
   description:
-    "Choose the AI agents your business needs — booking, voice calls, WhatsApp, follow-up, marketing and more — and run them from one interface.",
+    "Connect answers new leads, books appointments and follows up, using AI agents you choose one at a time.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${sans.variable} ${mono.variable} ${serif.variable}`}
+      className={`${sans.variable} ${serif.variable} ${mono.variable}`}
     >
       <body>{children}</body>
     </html>

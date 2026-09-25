@@ -1,0 +1,333 @@
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.top,
+.front,
+.side,
+.socket {
+  stroke: var(--ink);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+[data-tone="paper"] > .top { fill: var(--iso-paper-top); }
+[data-tone="paper"] > .front { fill: var(--iso-paper-front); }
+[data-tone="paper"] > .side { fill: var(--iso-paper-side); }
+
+[data-tone="moss"] > .top { fill: var(--iso-moss-top); }
+[data-tone="moss"] > .front { fill: var(--iso-moss-front); }
+[data-tone="moss"] > .side { fill: var(--iso-moss-side); }
+
+[data-tone="plate"] > .top { fill: var(--iso-plate-top); }
+[data-tone="plate"] > .front { fill: var(--iso-plate-front); }
+[data-tone="plate"] > .side { fill: var(--iso-plate-side); }
+
+.glyph {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.glyph * {
+  vector-effect: non-scaling-stroke;
+}
+
+.glyph .fill {
+  fill: var(--ink);
+  stroke: none;
+}
+
+.socket {
+  fill: none;
+  stroke: var(--faint);
+  stroke-dasharray: 3 3;
+}
+
+.leader {
+  stroke: var(--ink);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 2 3;
+}
+
+.leaderDot {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.module {
+  animation: seat 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes seat {
+  from {
+    opacity: 0;
+    transform: translateY(-9px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.boardWrap {
+  position: relative;
+  width: 100%;
+  container-type: inline-size;
+}
+
+@container (max-width: 640px) {
+  .callout {
+    font-size: 9px;
+    letter-spacing: 0;
+  }
+}
+
+.callout {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  padding-bottom: 6px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink-2);
+}
+
+.callout[data-pos="below"] {
+  transform: translate(-50%, 0);
+  padding: 6px 0 0;
+}
+
+.callout[data-pos="right"] {
+  transform: translate(0, -50%);
+  padding: 0 0 0 8px;
+}
+
+@media (max-width: 560px) {
+  .callout,
+  .leader,
+  .leaderDot {
+    display: none;
+  }
+}
+
+.icon {
+  display: block;
+  width: 44px;
+  height: auto;
+  overflow: visible;
+}
+
+.mark {
+  display: block;
+  overflow: visible;
+}
+
+.packet {
+  fill: var(--moss);
+}
+
+.path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+  vector-effect: non-scaling-stroke;
+}
+
+.flowWrap {
+  position: relative;
+}
+
+.step {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+
+.step b {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  font-weight: 400;
+}
+
+.step::after {
+  content: "";
+  width: 1px;
+  height: 18px;
+  background: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .packet {
+    display: none;
+  }
+}
+
+/* ---------- Board details ---------- */
+[data-tone="ink"] > .top { fill: #2b2a22; }
+[data-tone="ink"] > .front { fill: var(--ink); }
+[data-tone="ink"] > .side { fill: #0c0b08; }
+
+.shadow { fill: rgba(23, 22, 15, 0.08); }
+
+.groove {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 0.6;
+  stroke-opacity: 0.45;
+  vector-effect: non-scaling-stroke;
+}
+
+.jack { fill: var(--ink); }
+
+.screw {
+  fill: var(--iso-paper-top);
+  stroke: var(--ink);
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.screwSlot {
+  stroke: var(--ink);
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.trace,
+.traceIdle {
+  fill: none;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.trace { stroke: var(--ink); stroke-width: 1.2; }
+
+.traceIdle {
+  stroke: var(--faint);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+
+.pulse {
+  fill: none;
+  stroke: var(--moss);
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  stroke-dasharray: 14 86;
+  animation: flow 2.4s linear infinite;
+}
+
+@keyframes flow {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+.via { fill: var(--ink); }
+
+.viaIdle {
+  fill: var(--iso-plate-top);
+  stroke: var(--faint);
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.socketBed {
+  fill: rgba(23, 22, 15, 0.035);
+  stroke: var(--faint);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.socketGhost {
+  fill: rgba(63, 90, 54, 0.1);
+  stroke: var(--moss);
+  stroke-width: 1.2;
+  stroke-dasharray: 3 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.floatShadow { fill: rgba(23, 22, 15, 0.12); }
+
+.plateText,
+.faceText,
+.coreTitle,
+.coreText {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  letter-spacing: 0.08em;
+}
+
+.plateText { font-size: 1.15px; fill: var(--muted); }
+.faceText { font-size: 1.2px; fill: var(--ink-2); }
+.coreTitle { font-size: 1.5px; fill: var(--paper); }
+.coreText { font-size: 1.05px; fill: #a9a390; }
+
+.coreLed {
+  fill: #b9d58f;
+  animation: blink 1.6s ease-in-out infinite;
+}
+
+.led { fill: var(--moss); }
+
+.ledBlink {
+  fill: var(--moss);
+  animation: blink 0.9s ease-in-out infinite;
+}
+
+.vent {
+  stroke: var(--ink);
+  stroke-width: 0.9;
+  stroke-opacity: 0.55;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.guide {
+  stroke: var(--moss);
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.cable {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.float { animation: bob 3.2s ease-in-out infinite alternate; }
+
+@keyframes bob {
+  from { transform: translateY(0); }
+  to { transform: translateY(-1.6px); }
+}
+
+@keyframes blink {
+  50% { opacity: 0.25; }
+}

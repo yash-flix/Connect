@@ -1,0 +1,393 @@
+/*
+ * Rectangle / frame motifs.
+ * Hairline 1px strokes, radii 0–6px, no gradients, no shadows.
+ * All motion is gated behind prefers-reduced-motion: no-preference.
+ * Nothing here extends outside its own box (safe at 375px).
+ */
+
+/* ---------- shared mono label ---------- */
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ---------- Frame ---------- */
+
+.frame {
+  --frame-inset: 7px; /* gap between crop marks and outline */
+  --frame-arm: 12px; /* crop mark arm length */
+  --frame-line: var(--rule);
+  --frame-mark: var(--faint);
+  --frame-bg: var(--paper); /* colour behind the caption knock-out */
+  position: relative;
+  display: block;
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+  padding: calc(var(--frame-inset) + var(--frame-pad, 24px));
+}
+
+.frame[data-tone="moss"] {
+  --frame-line: color-mix(in srgb, var(--moss) 45%, var(--rule));
+  --frame-mark: var(--moss);
+}
+
+.frame[data-pad="none"] { --frame-pad: 0px; }
+.frame[data-pad="sm"] { --frame-pad: 12px; }
+.frame[data-pad="md"] { --frame-pad: 24px; }
+.frame[data-pad="lg"] { --frame-pad: clamp(24px, 4vw, 48px); }
+
+.outline {
+  position: absolute;
+  inset: var(--frame-inset);
+  border: 1px solid var(--frame-line);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.mark {
+  position: absolute;
+  width: var(--frame-arm);
+  height: var(--frame-arm);
+  border-color: var(--frame-mark);
+  border-style: solid;
+  border-width: 0;
+  pointer-events: none;
+}
+
+.mark[data-c="tl"] { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+.mark[data-c="tr"] { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+.mark[data-c="bl"] { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
+.mark[data-c="br"] { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+
+.caption,
+.note {
+  position: absolute;
+  z-index: 1;
+  max-width: calc(100% - 4 * var(--frame-arm));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 8px;
+  background: var(--frame-bg);
+}
+
+.caption {
+  top: calc(var(--frame-inset) - 5px);
+  left: calc(var(--frame-arm) + var(--frame-inset));
+}
+
+.note {
+  bottom: calc(var(--frame-inset) - 5px);
+  right: calc(var(--frame-arm) + var(--frame-inset));
+}
+
+.frameBody {
+  position: relative;
+  min-width: 0;
+}
+
+/* ---------- RectStack ---------- */
+
+.stack {
+  --stack-step: 10px;
+  --stack-reach: calc(var(--stack-step) * (var(--stack-layers) - 1));
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0;
+}
+
+/* reserve room for the offset layers on the side they travel to */
+.stack[data-dir="se"] { padding: 0 var(--stack-reach) var(--stack-reach) 0; }
+.stack[data-dir="ne"] { padding: var(--stack-reach) var(--stack-reach) 0 0; }
+.stack[data-dir="sw"] { padding: 0 0 var(--stack-reach) var(--stack-reach); }
+.stack[data-dir="nw"] { padding: var(--stack-reach) 0 0 var(--stack-reach); }
+
+.stackInner {
+  position: relative;
+  min-width: 0;
+}
+
+.stackInner[data-ratio] {
+  aspect-ratio: var(--stack-ratio);
+}
+
+.sheet {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--stack-radius, 4px);
+  background: var(--paper);
+  translate: var(--tx) var(--ty);
+}
+
+.stack[data-fill="wire"] .sheet {
+  background: transparent;
+}
+
+.stack[data-dir="se"] .sheet { --tx: calc(var(--k) * var(--stack-step)); --ty: calc(var(--k) * var(--stack-step)); }
+.stack[data-dir="ne"] .sheet { --tx: calc(var(--k) * var(--stack-step)); --ty: calc(var(--k) * var(--stack-step) * -1); }
+.stack[data-dir="sw"] .sheet { --tx: calc(var(--k) * var(--stack-step) * -1); --ty: calc(var(--k) * var(--stack-step)); }
+.stack[data-dir="nw"] .sheet { --tx: calc(var(--k) * var(--stack-step) * -1); --ty: calc(var(--k) * var(--stack-step) * -1); }
+
+.stack[data-accent="back"] .sheet[data-last] {
+  border-color: var(--moss);
+  background: var(--moss-tint);
+}
+
+.front {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  min-width: 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--stack-radius, 4px);
+  background: var(--card);
+}
+
+.stack[data-accent="front"] .front {
+  border-color: var(--moss);
+}
+
+.stack[data-fill="wire"] .front:empty {
+  background: transparent;
+}
+
+/* ---------- Panel ---------- */
+
+.panel {
+  min-width: 0;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--card);
+  overflow: hidden;
+}
+
+.panel[data-tone="moss"] {
+  border-color: color-mix(in srgb, var(--moss) 45%, var(--rule));
+}
+
+.panelBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  height: 34px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper-2);
+}
+
+.panel[data-tone="moss"] .panelBar {
+  background: var(--moss-tint);
+  border-bottom-color: color-mix(in srgb, var(--moss) 30%, var(--rule));
+}
+
+.panelKeys {
+  display: flex;
+  flex: none;
+  gap: 4px;
+}
+
+.panelKeys span {
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--faint);
+  border-radius: 1px;
+}
+
+.panel[data-tone="moss"] .panelKeys span:first-child {
+  border-color: var(--moss);
+  background: var(--moss);
+}
+
+.panelTitle {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ink-2);
+}
+
+.panelMeta {
+  flex: none;
+  color: var(--faint);
+}
+
+.panelBody {
+  min-width: 0;
+  padding: var(--panel-pad, 20px);
+}
+
+/* ---------- Divider (drafting scale rule) ---------- */
+
+.divider {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  min-width: 0;
+  width: 100%;
+}
+
+.dividerText {
+  display: flex;
+  flex: none;
+  align-items: baseline;
+  gap: 10px;
+  max-width: 70%;
+  min-width: 0;
+  padding-bottom: 1px;
+}
+
+.dividerIndex {
+  color: var(--moss);
+}
+
+.dividerLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scale {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 24px;
+  height: 9px;
+  border-bottom: 1px solid var(--rule);
+  /* hard-stop tick marks (not a visual gradient): minor every 8px, major every 64px */
+  background-image:
+    repeating-linear-gradient(to right, var(--faint) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(to right, var(--rule) 0 1px, transparent 1px 8px);
+  background-size: 100% 9px, 100% 4px;
+  background-position: left bottom, left bottom;
+  background-repeat: no-repeat;
+}
+
+.divider[data-ticks="false"] .scale {
+  background-image: none;
+}
+
+/* ---------- RectField ---------- */
+
+.field {
+  --field-gap: 8px;
+  --field-ratio: 1;
+  --field-stagger: 28ms;
+  display: grid;
+  grid-template-columns: repeat(var(--field-cols), minmax(0, 1fr));
+  gap: var(--field-gap);
+  min-width: 0;
+  width: 100%;
+}
+
+.cell {
+  position: relative;
+  aspect-ratio: var(--field-ratio);
+  min-width: 0;
+  border-radius: 1px;
+}
+
+/* the four sides are drawn by two pseudo-elements so they can "draw in" */
+.cell::before,
+.cell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-color: var(--rule);
+  border-style: solid;
+  border-width: 0;
+  border-radius: inherit;
+}
+
+.cell::before { border-top-width: 1px; border-bottom-width: 1px; }
+.cell::after { border-left-width: 1px; border-right-width: 1px; }
+
+.cell[data-kind="fill"] {
+  background: var(--paper-2);
+}
+
+.cell[data-kind="accent"] {
+  background: var(--moss-tint);
+}
+
+.cell[data-kind="accent"]::before,
+.cell[data-kind="accent"]::after {
+  border-color: var(--moss);
+}
+
+.cell[data-kind="ghost"]::before,
+.cell[data-kind="ghost"]::after {
+  border-style: dashed;
+  border-color: var(--rule);
+}
+
+/* ---------- motion (opt-in, reduced-motion safe) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* RectField: armed = below the fold at mount; in = revealed */
+  .field[data-state="armed"] .cell::before { transform: scaleX(0); }
+  .field[data-state="armed"] .cell::after { transform: scaleY(0); }
+  .field[data-state="armed"] .cell[data-kind="fill"],
+  .field[data-state="armed"] .cell[data-kind="accent"] { background-color: transparent; }
+
+  .field[data-state="in"] .cell::before,
+  .field[data-state="in"] .cell::after {
+    transition: transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: calc(var(--i) * var(--field-stagger));
+  }
+
+  .field[data-state="in"] .cell::before { transform-origin: left center; }
+  .field[data-state="in"] .cell::after { transform-origin: center top; }
+
+  .field[data-state="in"] .cell {
+    transition: background-color 400ms ease;
+    transition-delay: calc(var(--i) * var(--field-stagger) + 360ms);
+  }
+
+  /* Frame + RectStack: scroll-driven draw-in where supported; static elsewhere */
+  @supports (animation-timeline: view()) {
+    .frame[data-animate] .mark {
+      animation: markIn linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+
+    .frame[data-animate] .outline {
+      animation: outlineIn linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 80%;
+    }
+
+    .stack[data-animate] .sheet {
+      animation: fanOut linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+  }
+}
+
+@keyframes markIn {
+  from { opacity: 0; scale: 0.2; }
+  to { opacity: 1; scale: 1; }
+}
+
+.mark[data-c="tl"] { transform-origin: top left; }
+.mark[data-c="tr"] { transform-origin: top right; }
+.mark[data-c="bl"] { transform-origin: bottom left; }
+.mark[data-c="br"] { transform-origin: bottom right; }
+
+@keyframes outlineIn {
+  from { clip-path: inset(0 100% 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes fanOut {
+  from { translate: 0 0; }
+  to { translate: var(--tx) var(--ty); }
+}

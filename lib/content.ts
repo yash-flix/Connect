@@ -1,89 +1,141 @@
+export type AgentId =
+  | "booking"
+  | "voice"
+  | "whatsapp"
+  | "followup"
+  | "content"
+  | "marketing"
+  | "leadgen"
+  | "proposal";
+
 export type Agent = {
-  id: string;
+  id: AgentId;
   code: string;
   name: string;
   job: string;
   example: string;
+  /** Module height on the isometric board. */
+  height: number;
 };
 
 export const agents: Agent[] = [
   {
     id: "booking",
-    code: "01",
+    code: "A-01",
     name: "Booking",
-    job: "Offers open slots, confirms appointments and sends reminders.",
-    example: "“Tuesday at 4 works. You’re booked — see you then.”",
+    job: "Offers open slots from your calendar, confirms one and sends a reminder.",
+    example: "Books Tuesday 4:00 pm while you’re with another client.",
+    height: 8,
   },
   {
     id: "voice",
-    code: "02",
-    name: "Voice calling",
-    job: "Answers and returns calls so inquiries don’t sit in voicemail.",
-    example: "Picks up the missed call from lunch and books the visit.",
+    code: "A-02",
+    name: "Voice",
+    job: "Answers calls you can’t take and returns the ones you missed.",
+    example: "Calls back the lunchtime missed call and books the visit.",
+    height: 5,
   },
   {
     id: "whatsapp",
-    code: "03",
-    name: "WhatsApp chat",
-    job: "Replies to WhatsApp messages with prices, hours and next steps.",
-    example: "Answers “Are you open Saturday?” within the conversation.",
+    code: "A-03",
+    name: "WhatsApp",
+    job: "Replies to WhatsApp messages with your prices, hours and services.",
+    example: "Answers “Are you open Saturday?” at 9:40 pm.",
+    height: 10,
   },
   {
     id: "followup",
-    code: "04",
+    code: "A-04",
     name: "Follow-up",
-    job: "Checks in with leads who went quiet and customers due to return.",
+    job: "Checks in with leads who went quiet and clients who are due back.",
     example: "Nudges the Friday inquiry that never picked a time.",
+    height: 6,
   },
   {
     id: "content",
-    code: "05",
+    code: "A-05",
     name: "Content",
-    job: "Drafts posts and updates in your voice for you to approve.",
-    example: "Turns this week’s openings into a short post.",
+    job: "Drafts posts and updates in your voice. Nothing goes out until you approve it.",
+    example: "Turns next week’s open slots into a short post.",
+    height: 4,
   },
   {
     id: "marketing",
-    code: "06",
+    code: "A-06",
     name: "Marketing",
-    job: "Runs simple campaigns to past customers and new audiences.",
-    example: "Lets past clients know about a seasonal offer.",
+    job: "Sends simple campaigns to past clients and people who asked but didn’t book.",
+    example: "Tells last year’s clients the season is opening up.",
+    height: 7,
   },
   {
     id: "leadgen",
-    code: "07",
+    code: "A-07",
     name: "Lead generation",
-    job: "Finds and qualifies new prospects that fit how you work.",
-    example: "Builds a list of nearby businesses that need your service.",
+    job: "Finds prospects that match the work you want more of.",
+    example: "Lists nearby offices that might need regular servicing.",
+    height: 5,
   },
   {
     id: "proposal",
-    code: "08",
+    code: "A-08",
     name: "Proposals",
-    job: "Prepares quotes and proposals from the details a lead shares.",
-    example: "Drafts a quote after the site visit for you to review.",
+    job: "Turns what a lead told you into a draft quote for you to check.",
+    example: "Drafts the quote after a site visit, ready for your edits.",
+    height: 9,
   },
+];
+
+export const steps = [
+  {
+    n: "01",
+    title: "A lead gets in touch",
+    body: "A WhatsApp message at 9:40 pm, a call you couldn’t pick up, a form on your site.",
+  },
+  {
+    n: "02",
+    title: "Connect replies",
+    body: "The WhatsApp or Voice agent answers with your prices, hours and services.",
+  },
+  {
+    n: "03",
+    title: "An appointment is booked",
+    body: "The Booking agent offers open slots from your calendar and confirms one.",
+  },
+  {
+    n: "04",
+    title: "Nobody is forgotten",
+    body: "Reminders go out before the visit. Leads who went quiet get a nudge.",
+  },
+];
+
+export const rules = [
+  { k: "Opening hours", v: "Mon–Fri 08:00–19:00 · Sat 09:00–13:00" },
+  { k: "First visit", v: "45 minutes, priced from your list" },
+  { k: "Booking notice", v: "At least 2 hours ahead" },
+  { k: "Reminders", v: "24 hours before, on WhatsApp" },
+  { k: "Tone", v: "Friendly, short, first names" },
+  { k: "Pass to me", v: "Complaints, refunds, anything clinical" },
 ];
 
 export const faqs = [
   {
-    q: "Is Connect available today?",
-    a: "Not yet. Connect is being built now, and we’re working with a small group of service businesses to shape it. Join early access and we’ll walk through your workflow with you.",
+    q: "Can I use Connect today?",
+    a: "Not yet. Connect is in development and we’re building it with a small group of service businesses. Join early access and we’ll map your workflow with you.",
   },
   {
-    q: "Do I have to use every agent?",
-    a: "No. You choose only the agents that fit how your business runs. Start with one — booking or follow-up is common — and add others when they make sense.",
+    q: "Do I need every agent?",
+    a: "No. Install the ones that match where your time goes. Most businesses would start with one, often Booking or Follow-up, and add others later.",
   },
   {
-    q: "Who stays in control?",
-    a: "You do. Agents handle the repetitive parts — first replies, scheduling, reminders — and you set the rules, review what they do, and step in whenever you want.",
+    q: "Who’s in control?",
+    a: "You are. You set the hours, prices and rules. You can read every conversation, take one over at any point, and decide which requests always come to you.",
   },
   {
-    q: "What kind of business is Connect for?",
-    a: "Small service businesses that get inquiries and appointment requests: clinics, salons, studios, home services, consultants and similar teams where the owner or a few staff handle leads by hand.",
+    q: "What kind of business is it for?",
+    a: "Small service businesses that get inquiries and appointment requests. Clinics, salons, studios, home services, tutors, consultants. Usually the owner or a few staff handle leads by hand today.",
   },
   {
-    q: "What will it cost?",
-    a: "Pricing isn’t set yet. Because you pick your agents, the plan is for you to pay for what you use rather than a bundle you don’t need.",
+    q: "How will pricing work?",
+    a: "It isn’t set yet. Because you choose your agents, the aim is that you pay for the ones you use and nothing else.",
   },
 ];

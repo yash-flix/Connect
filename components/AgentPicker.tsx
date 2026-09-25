@@ -1,69 +1,71 @@
 "use client";
 
 import { useState } from "react";
-import { agents } from "@/lib/content";
+import { agents, type AgentId } from "@/lib/content";
+import { BoardFigure } from "./BoardFigure";
+import { ModuleIcon } from "./iso";
 import styles from "./site.module.css";
 
-const DEFAULT = ["booking", "whatsapp", "followup"];
+const DEFAULT: AgentId[] = ["booking", "whatsapp", "followup"];
 
 export function AgentPicker() {
-  const [selected, setSelected] = useState<string[]>(DEFAULT);
+  const [installed, setInstalled] = useState<AgentId[]>(DEFAULT);
 
-  const toggle = (id: string) =>
-    setSelected((cur) =>
+  const toggle = (id: AgentId) =>
+    setInstalled((cur) =>
       cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id],
     );
 
-  const chosen = agents.filter((a) => selected.includes(a.id));
+  const chosen = agents.filter((a) => installed.includes(a.id));
 
   return (
     <div className={styles.picker}>
-      <ul className={styles.agentGrid}>
+      <ol className={styles.catalogue}>
         {agents.map((a) => {
-          const on = selected.includes(a.id);
+          const on = installed.includes(a.id);
           return (
-            <li key={a.id}>
+            <li key={a.id} className={styles.entry} data-on={on}>
+              <ModuleIcon id={a.id} on={on} />
+              <div className={styles.entryText}>
+                <div className={styles.entryHead}>
+                  <span className={styles.entryName}>{a.name}</span>
+                  <span className={styles.code}>{a.code}</span>
+                </div>
+                <p className={styles.entryJob}>{a.job}</p>
+                <p className={styles.entryExample}>{a.example}</p>
+              </div>
               <button
                 type="button"
-                className={styles.agentCard}
-                data-on={on}
+                className={styles.toggle}
                 aria-pressed={on}
+                aria-label={`${on ? "Remove" : "Install"} ${a.name}`}
                 onClick={() => toggle(a.id)}
               >
-                <span className={styles.agentTop}>
-                  <span className={styles.mono}>{a.code}</span>
-                  <span className={styles.check} aria-hidden="true">
-                    {on ? "✓" : "+"}
-                  </span>
-                </span>
-                <span className={styles.agentName}>{a.name}</span>
-                <span className={styles.agentJob}>{a.job}</span>
-                <span className={styles.agentExample}>{a.example}</span>
+                {on ? "Installed" : "Install"}
               </button>
             </li>
           );
         })}
-      </ul>
-
-      <div className={styles.summary} aria-live="polite">
-        <div>
-          <span className={styles.mono}>Your Connect</span>
-          <p className={styles.summaryList}>
-            {chosen.length === 0
-              ? "No agents yet — pick the work you want off your plate."
-              : chosen.map((a) => a.name).join(" · ")}
-          </p>
-        </div>
-        <div className={styles.summaryRight}>
-          <span className={styles.summaryCount}>
-            {chosen.length}
-            <span> / {agents.length} agents</span>
-          </span>
-          <a href="#early-access" className={styles.btnPrimary}>
-            Request this setup
-          </a>
-        </div>
+      </ol>
+      <div className={styles.preview} aria-live="polite">
+        <BoardFigure
+          fig="Fig. 3 · Your board"
+          status={`${chosen.length} of ${agents.length} installed`}
+          installed={installed}
+          label={`Connect board with ${chosen.length} agents installed`}
+          caption={
+            chosen.length === 0
+              ? "An empty board. Install an agent to start."
+              : chosen.map((a) => a.name).join(" + ")
+          }
+          meta={
+            <a href="#early-access" className={styles.btnPrimary}>
+              Ask about this setup
+            </a>
+          }
+        />
       </div>
+
     </div>
   );
 }
