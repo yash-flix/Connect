@@ -36,7 +36,7 @@ function frontMatrix(x: number, y: number, z: number) {
   return `matrix(${COS30} 0.5 0 1 ${e.toFixed(2)} ${f.toFixed(2)})`;
 }
 
-type Label = { key: string; text: string; left: number; top: number; pos: "above" | "below" | "right" };
+type Label = { key: string; text: string; sub?: string; left: number; top: number; pos: "above" | "below" | "right" };
 
 function Module({
   agent,
@@ -141,7 +141,7 @@ export function Board({ installed, installing, annotated = false, label }: Board
     2,
   );
   const lead = 9;
-  const vb = { x: b.minX - 4, y: b.minY - lead, w: b.w + 22, h: b.h + lead * 2 };
+  const vb = { x: b.minX - 4, y: b.minY - lead - 4, w: b.w + 22, h: b.h + lead * 2 + 4 };
   const pct = (x: number, y: number) => ({
     left: ((x - vb.x) / vb.w) * 100,
     top: ((y - vb.y) / vb.h) * 100,
@@ -150,7 +150,7 @@ export function Board({ installed, installing, annotated = false, label }: Board
   const labels: Label[] = [];
   const leaders: { key: string; x: number; y1: number; y2: number }[] = [];
   if (annotated) {
-    const topY = vb.y + 2.5;
+    const topY = vb.y + 6.5;
     const bottomY = vb.y + vb.h - 2.5;
     for (const m of mods) {
       if (!m.on && !m.floating) continue;
@@ -164,7 +164,8 @@ export function Board({ installed, installing, annotated = false, label }: Board
       leaders.push({ key: m.agent.id, x: ax, y1: ay, y2: ey });
       labels.push({
         key: m.agent.id,
-        text: m.floating ? `${m.agent.name} · installing` : m.agent.name,
+        text: m.agent.name,
+        sub: m.floating ? "installing" : undefined,
         pos: above ? "above" : "below",
         ...pct(ax, ey),
       });
@@ -373,6 +374,7 @@ export function Board({ installed, installing, annotated = false, label }: Board
           data-pos={l.pos}
           style={{ left: `${l.left}%`, top: `${l.top}%` }}
         >
+          {l.sub && <em className={styles.calloutSub}>{l.sub}</em>}
           {l.text}
         </span>
       ))}

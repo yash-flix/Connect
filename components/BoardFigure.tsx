@@ -11,18 +11,22 @@ type Props = {
   label: string;
   caption: ReactNode;
   meta: ReactNode;
+  /** Optional panel beside the board, e.g. a legend. */
+  aside?: ReactNode;
 };
 
 /** The drawing sheet every board figure sits on, so they all match. */
-export function BoardFigure({ fig, status, installed, installing, label, caption, meta }: Props) {
+export function BoardFigure({ fig, status, installed, installing, label, caption, meta, aside }: Props) {
   return (
     <figure className={styles.sheet}>
+      <span className={styles.crosshairs} aria-hidden="true" />
       <div className={styles.sheetHead}>
         <span className={styles.code}>{fig}</span>
         <span className={styles.code}>{status}</span>
       </div>
-      <div className={styles.sheetBoard}>
+      <div className={styles.sheetBoard} data-aside={aside ? true : undefined}>
         <Board installed={installed} installing={installing} annotated label={label} />
+        {aside}
       </div>
       <figcaption className={styles.sheetFoot}>
         <span>{caption}</span>

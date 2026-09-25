@@ -104,6 +104,13 @@
   color: var(--ink-2);
 }
 
+.calloutSub {
+  display: block;
+  font-style: normal;
+  color: var(--moss);
+  text-align: center;
+}
+
 .callout[data-pos="below"] {
   transform: translate(-50%, 0);
   padding: 6px 0 0;
