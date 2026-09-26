@@ -157,37 +157,6 @@
   position: relative;
 }
 
-.step {
-  position: absolute;
-  transform: translate(-50%, -100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  color: var(--ink);
-}
-
-.step b {
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border: 1px solid var(--ink);
-  border-radius: 50%;
-  background: var(--paper);
-  font-weight: 400;
-}
-
-.step::after {
-  content: "";
-  width: 1px;
-  height: 18px;
-  background: var(--ink);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .packet {
     display: none;

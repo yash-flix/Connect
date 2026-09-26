@@ -1,12 +1,11 @@
 import { AgentPicker } from "@/components/AgentPicker";
+import { ChatFigure } from "@/components/ChatFigure";
 import { EarlyAccess } from "@/components/EarlyAccess";
 import { FlowScene } from "@/components/FlowScene";
-import { BoardFigure } from "@/components/BoardFigure";
-import { Glyph, Mark, ModuleIcon } from "@/components/iso";
-import { Legend } from "@/components/Legend";
+import { Glyph } from "@/components/iso";
 import { Logo } from "@/components/Logo";
 import { MobileMenu } from "@/components/MobileMenu";
-import { agents, faqs, rules, steps } from "@/lib/content";
+import { faqs, rules, steps } from "@/lib/content";
 import styles from "@/components/site.module.css";
 
 export default function Home() {
@@ -34,35 +33,29 @@ export default function Home() {
         {/* ---------- Hero ---------- */}
         <section className={styles.hero}>
           <div className={styles.wrap}>
-            <div className={styles.heroSheet} aria-hidden="true">
-              <span>Sheet 01 · Front desk</span>
-              <span>Rev 0.1 · {new Date().getFullYear()}</span>
-            </div>
-
             <div className={styles.heroGrid}>
               <div className={styles.heroCopy}>
                 <p className={`${styles.eyebrow} ${styles.rise}`}>
-                  AI agents for small service businesses
+                  For clinics, salons, studios and home services
                 </p>
                 <h1 className={`${styles.display} ${styles.rise}`} style={{ animationDelay: "0.08s" }}>
-                  The front desk for businesses{" "}
-                  <span className={styles.nowrap}>
-                    that <span className={styles.accent}>don’t have one.</span>
-                  </span>
+                  Never lose a customer{" "}
+                  <span className={styles.accent}>because you were busy.</span>
                 </h1>
               </div>
               <div className={`${styles.heroAside} ${styles.rise}`} style={{ animationDelay: "0.2s" }}>
                 <p className={styles.lede}>
-                  Connect answers new leads, books appointments and follows
-                  up, using AI agents you choose one at a time. Start with the
-                  job that eats most of your day. Add more when it makes sense.
+                  While you’re with a client, messages and calls go
+                  unanswered, and those people book somewhere else. Connect
+                  gives you AI agents that reply for you, book the appointment
+                  and follow up.
                 </p>
                 <div className={styles.ctaRow}>
-                  <a href="#agents" className={styles.btnPrimary}>
-                    Choose your agents
+                  <a href="#flow" className={styles.btnPrimary}>
+                    See how it works
                   </a>
-                  <a href="#flow" className={styles.btnGhost}>
-                    See how a lead moves
+                  <a href="#early-access" className={styles.btnGhost}>
+                    Get early access
                   </a>
                 </div>
                 <div className={styles.channelRow}>
@@ -88,48 +81,30 @@ export default function Home() {
               </div>
             </div>
 
-            <BoardFigure
-              fig="Fig. 1 · Connect board"
-              status="4 installed · 1 installing"
-              installed={["voice", "whatsapp", "followup", "proposal"]}
-              installing="booking"
-              label="A Connect board with Voice, WhatsApp, Follow-up and Proposals installed, Booking being plugged in, and four channels wired into the core."
-              caption="Each module is one agent. They all route into one core, so every agent shares the same inbox, calendar and rules."
-              meta={<span className={styles.code}>Illustration · product in development</span>}
-              aside={<Legend />}
-            />
+            <ChatFigure />
           </div>
         </section>
 
         {/* ---------- Flow ---------- */}
         <section id="flow" className={styles.section}>
           <div className={styles.wrap}>
-            <header className={styles.head}>
-              <p className={styles.eyebrow}>§ 1 · How a lead moves</p>
-              <h2 className={styles.h2}>
-                Someone messages at 9:40 pm. Here’s what happens next.
-              </h2>
+            <header className={`${styles.head} ${styles.headSplit}`}>
+              <div>
+                <p className={styles.eyebrow}>§ 1 · How it works</p>
+                <h2 className={styles.h2}>From first message to booked visit, in four steps.</h2>
+              </div>
+              <p className={styles.lede}>
+                Every lead follows the same path. Connect handles each step
+                for you, so nobody waits and nobody slips through.
+              </p>
             </header>
 
-            <div className={styles.flowGrid}>
-              <ol className={styles.stepList}>
-                {steps.map((s) => (
-                  <li key={s.n}>
-                    <span className={styles.stepNum}>{s.n}</span>
-                    <div>
-                      <h3 className={styles.h3}>{s.title}</h3>
-                      <p className={styles.muted}>{s.body}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-              <figure className={styles.flowFigure}>
-                <FlowScene />
-                <figcaption className={styles.code}>
-                  Fig. 2 · Inquiry → Connect → Calendar → Follow-up
-                </figcaption>
-              </figure>
-            </div>
+            <figure className={styles.flowFigure}>
+              <FlowScene steps={steps} />
+              <figcaption className={styles.code}>
+                Fig. 2 · Inquiry → Connect → Calendar → Follow-up
+              </figcaption>
+            </figure>
             <p className={styles.note}>
               Anything outside the rules you set, such as a complaint or an
               unusual request, is passed to you instead of guessed at.
@@ -146,9 +121,10 @@ export default function Home() {
                 <h2 className={styles.h2}>Eight agents. Install the ones you need.</h2>
               </div>
               <p className={styles.lede}>
-                Each agent does one job. They share one inbox, one calendar
-                and one set of rules, so adding a second doesn’t mean learning
-                a second tool.
+                Each step above is done by an agent, and each agent does one
+                job. Start with the one that saves you the most time. They
+                share one inbox, calendar and set of rules, so adding another
+                is easy.
               </p>
             </header>
             <AgentPicker />
@@ -243,114 +219,25 @@ export default function Home() {
       <footer className={styles.footer}>
         <div className={styles.wrap}>
           <div className={styles.footerHero}>
-            <p className={styles.footerWord}>
-              <Mark size={64} />
-              Connect
-            </p>
-            <div className={styles.footerCta}>
-              <p className={styles.lede}>
-                Fewer missed leads. More booked days. Start with one agent.
+            <div className={styles.footerBrand}>
+              <Logo />
+              <p className={styles.muted}>
+                The front desk for businesses that don’t have one.
               </p>
-              <a href="#early-access" className={styles.btnPrimary}>
-                Get early access
-              </a>
             </div>
-          </div>
-
-          <div className={styles.parts}>
-            <div className={styles.partsHead}>
-              <span className={styles.code}>Parts list</span>
-              <span className={styles.code}>8 agents · 1 core</span>
-            </div>
-            <ul className={styles.partsGrid}>
-              {agents.map((a) => (
-                <li key={a.id}>
-                  <a href="#agents" className={styles.part}>
-                    <ModuleIcon id={a.id} on />
-                    <span className={styles.code}>{a.code}</span>
-                    <span className={styles.partName}>{a.name}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className={styles.titleBlock}>
-            <div className={styles.tbProject}>
-              <span className={styles.tbLabel}>Project</span>
-              <p className={styles.tbTitle}>
-                Connect: the front desk for businesses that don’t have one.
-              </p>
-              <p className={styles.tbSub}>
-                <Mark size={20} />
-                Drawn for small service businesses
-              </p>
-              <svg className={styles.stamp} viewBox="0 0 120 120" aria-hidden="true">
-                <defs>
-                  <path id="stamp-ring" d="M60 60 m-44 0 a44 44 0 1 1 88 0 a44 44 0 1 1 -88 0" />
-                </defs>
-                <circle cx="60" cy="60" r="56" />
-                <circle cx="60" cy="60" r="34" />
-                <text>
-                  <textPath href="#stamp-ring">IN DEVELOPMENT · EARLY ACCESS · 2026 ·</textPath>
-                </text>
-                <text x="60" y="58" textAnchor="middle" className={styles.stampBig}>
-                  0.1
-                </text>
-                <text x="60" y="72" textAnchor="middle" className={styles.stampSmall}>
-                  REV
-                </text>
-              </svg>
-            </div>
-
-            <nav className={styles.tbContents} aria-label="Footer">
-              <span className={styles.tbLabel}>Contents</span>
-              <ol>
-                {[
-                  ["§ 1", "How it works", "#flow"],
-                  ["§ 2", "The agents", "#agents"],
-                  ["§ 3", "Control", "#rules"],
-                  ["§ 4", "Early access", "#early-access"],
-                  ["§ 5", "Questions", "#faq"],
-                ].map(([n, t, href]) => (
-                  <li key={href}>
-                    <a href={href}>
-                      <span className={styles.tbNum}>{n}</span>
-                      <span>{t}</span>
-                      <span className={styles.tbLeader} aria-hidden="true" />
-                      <span className={styles.tbPage}>{n.slice(2).padStart(2, "0")}</span>
-                    </a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-
-            <dl className={styles.tbMeta}>
-              <div>
-                <dt>Sheet</dt>
-                <dd>01 / 01</dd>
-              </div>
-              <div>
-                <dt>Revision</dt>
-                <dd>0.1</dd>
-              </div>
-              <div>
-                <dt>Scale</dt>
-                <dd>1 : 1</dd>
-              </div>
-              <div>
-                <dt>Date</dt>
-                <dd>{new Date().getFullYear()}</dd>
-              </div>
-              <div>
-                <dt>Status</dt>
-                <dd className={styles.tbStatus}>In development</dd>
-              </div>
-            </dl>
+            <a href="#early-access" className={styles.btnPrimary}>
+              Get early access
+            </a>
           </div>
 
           <div className={styles.footerBase}>
-            <span className={styles.code}>© {new Date().getFullYear()} Connect · All rights reserved</span>
+            <nav className={styles.footerLinks} aria-label="Footer">
+              <a href="#flow">How it works</a>
+              <a href="#agents">Agents</a>
+              <a href="#rules">Control</a>
+              <a href="#faq">FAQ</a>
+            </nav>
+            <span className={styles.code}>© {new Date().getFullYear()} Connect</span>
             <a href="#top" className={styles.code}>
               Back to top ↑
             </a>

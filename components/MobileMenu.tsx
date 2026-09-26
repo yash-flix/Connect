@@ -39,7 +39,7 @@ export function MobileMenu() {
             {links.map(([n, label, href]) => (
               <li key={href}>
                 <a href={href} onClick={() => setOpen(false)}>
-                  <span className={styles.tbNum}>{n}</span>
+                  <span className={styles.menuNum}>{n}</span>
                   {label}
                 </a>
               </li>

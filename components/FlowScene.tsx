@@ -1,43 +1,47 @@
-import { bounds, project, type Vec3 } from "@/lib/iso";
+import { COS30, project } from "@/lib/iso";
 import { Glyph, IsoBox } from "./iso";
 import styles from "./iso.module.css";
+import site from "./site.module.css";
 
-// Four stations along the x axis: inquiry → Connect → calendar → follow-up.
-const Y = 0;
+type Step = { n: string; title: string; body: string };
+
+// Four stations: inquiry → Connect → calendar → follow-up. Each is centred on
+// the world diagonal (t, -t), which projects to one horizontal screen line, so
+// the stations read left to right in a level row, each one directly above
+// its step's explanation.
+const STEP = 20; // world distance between station centres along t
+const SPACING = 2 * STEP * COS30; // the same distance on screen
 const stations = [
-  { n: "01", x: 0, w: 9, d: 9, h: 5 },
-  { n: "02", x: 26, w: 18, d: 14, h: 2 },
-  { n: "03", x: 60, w: 12, d: 12, h: 3 },
-  { n: "04", x: 88, w: 9, d: 9, h: 8 },
-];
+  { n: "01", s: 10, h: 5 },
+  { n: "02", s: 16, h: 2 },
+  { n: "03", s: 12, h: 3 },
+  { n: "04", s: 10, h: 8 },
+].map((st, i) => {
+  const t = i * STEP;
+  return { ...st, x: t - st.s / 2, y: -t - st.s / 2, cx: t, cy: -t };
+});
 
-const LANE_Y = 5.5;
+const TOP = 15; // headroom above the lane for the tallest block
+const BOTTOM = 10;
 
-export function FlowScene() {
-  const extents: Vec3[] = stations.flatMap((s) => [
-    [s.x, Y, s.h + 5] as Vec3,
-    [s.x + s.w, Y, 0] as Vec3,
-    [s.x, Y + s.d, 0] as Vec3,
-    [s.x + s.w, Y + s.d, 0] as Vec3,
-  ]);
-  const b = bounds(extents, 3);
-  const lead = 8;
-  const vb = { x: b.minX, y: b.minY - lead, w: b.w, h: b.h + lead };
+export function FlowScene({ steps }: { steps: Step[] }) {
+  const vb = {
+    x: project([stations[0].cx, stations[0].cy, 0])[0] - SPACING / 2,
+    y: -TOP,
+    w: SPACING * stations.length,
+    h: TOP + BOTTOM,
+  };
 
-  const [p0x, p0y] = project([4.5, LANE_Y, 0]);
-  const [p1x, p1y] = project([92.5, LANE_Y, 0]);
-  const lane = `M${p0x.toFixed(2)} ${p0y.toFixed(2)} L${p1x.toFixed(2)} ${p1y.toFixed(2)}`;
-
-  const markers = stations.map((s) => {
-    const [x, y] = project([s.x + s.w / 2, Y + s.d / 2, s.h + (s.n === "02" ? 6 : 1)]);
-    return {
-      n: s.n,
-      left: ((x - vb.x) / vb.w) * 100,
-      top: ((y - 4 - vb.y) / vb.h) * 100,
-    };
-  });
+  const ends = [stations[0], stations[stations.length - 1]].map((s) => project([s.cx, s.cy, 0]));
+  const lane = `M${ends[0][0].toFixed(2)} ${ends[0][1].toFixed(2)} L${ends[1][0].toFixed(2)} ${ends[1][1].toFixed(2)}`;
 
   const [inq, hub, cal, fol] = stations;
+  const hubMods = [
+    [2, 2, 5],
+    [9, 2, 7],
+    [2, 9, 4],
+    [9, 9, 6],
+  ];
 
   return (
     <div className={styles.flowWrap}>
@@ -51,27 +55,29 @@ export function FlowScene() {
         <path d={lane} className={styles.path} />
 
         {/* 01 Inquiry: a message block */}
-        <IsoBox x={inq.x} y={Y} z={0} w={inq.w} d={inq.d} h={inq.h}>
-          <g transform="scale(0.9)">
-            <Glyph id="whatsapp" />
-          </g>
+        <IsoBox x={inq.x} y={inq.y} z={0} w={inq.s} d={inq.s} h={inq.h}>
+          <Glyph id="whatsapp" />
         </IsoBox>
 
         {/* 02 Connect: a plate with modules */}
-        <IsoBox x={hub.x} y={Y} z={0} w={hub.w} d={hub.d} h={hub.h} tone="plate" />
-        {[
-          [hub.x + 2, 2, 5],
-          [hub.x + 10, 2, 7],
-          [hub.x + 2, 8, 4],
-          [hub.x + 10, 8, 6],
-        ]
+        <IsoBox x={hub.x} y={hub.y} z={0} w={hub.s} d={hub.s} h={hub.h} tone="plate" />
+        {hubMods
           .sort((a, b) => a[0] + a[1] - (b[0] + b[1]))
-          .map(([x, y, h]) => (
-            <IsoBox key={`${x}-${y}`} x={x} y={y} z={hub.h} w={6} d={4.5} h={h} tone="moss" />
+          .map(([dx, dy, h]) => (
+            <IsoBox
+              key={`${dx}-${dy}`}
+              x={hub.x + dx}
+              y={hub.y + dy}
+              z={hub.h}
+              w={5}
+              d={5}
+              h={h}
+              tone="moss"
+            />
           ))}
 
         {/* 03 Calendar: a slab with a grid and one booked slot */}
-        <IsoBox x={cal.x} y={Y} z={0} w={cal.w} d={cal.d} h={cal.h}>
+        <IsoBox x={cal.x} y={cal.y} z={0} w={cal.s} d={cal.s} h={cal.h}>
           <g>
             {[0, 1, 2].map((r) =>
               [0, 1, 2].map((c) => (
@@ -87,31 +93,30 @@ export function FlowScene() {
             )}
           </g>
         </IsoBox>
-        <IsoBox x={cal.x + 4.7} y={Y + 4.7} z={cal.h} w={2.6} d={2.6} h={2.4} tone="moss" />
+        <IsoBox x={cal.x + 4.7} y={cal.y + 4.7} z={cal.h} w={2.6} d={2.6} h={2.4} tone="moss" />
 
         {/* 04 Follow-up: a tall block with a loop */}
-        <IsoBox x={fol.x} y={Y} z={0} w={fol.w} d={fol.d} h={fol.h}>
-          <g transform="scale(0.9)">
-            <Glyph id="followup" />
-          </g>
+        <IsoBox x={fol.x} y={fol.y} z={0} w={fol.s} d={fol.s} h={fol.h}>
+          <Glyph id="followup" />
         </IsoBox>
 
         {/* Moving lead */}
         <circle r="1.1" className={styles.packet}>
-          <animateMotion dur="6s" repeatCount="indefinite" path={lane} keyPoints="0;0.3;0.3;0.66;0.66;1" keyTimes="0;0.25;0.4;0.65;0.8;1" calcMode="linear" />
+          <animateMotion dur="6s" repeatCount="indefinite" path={lane} keyPoints="0;0.33;0.33;0.67;0.67;1" keyTimes="0;0.25;0.4;0.65;0.8;1" calcMode="linear" />
         </circle>
       </svg>
 
-      {markers.map((m) => (
-        <span
-          key={m.n}
-          className={styles.step}
-          style={{ left: `${m.left}%`, top: `${m.top}%` }}
-          aria-hidden="true"
-        >
-          <b>{m.n}</b>
-        </span>
-      ))}
+      <ol className={site.flowSteps}>
+        {steps.map((st) => (
+          <li key={st.n}>
+            <span className={site.stepNum}>{st.n}</span>
+            <div>
+              <h3 className={site.h3}>{st.title}</h3>
+              <p className={site.muted}>{st.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }
