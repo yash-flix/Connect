@@ -1,14 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { navLinks } from "@/lib/nav";
 import styles from "./site.module.css";
 
+// Same links as the header, with early access in its section order before FAQ.
 const links = [
-  ["§ 1", "How it works", "#flow"],
-  ["§ 2", "Agents", "#agents"],
-  ["§ 3", "Control", "#rules"],
-  ["§ 4", "Early access", "#early-access"],
-  ["§ 5", "FAQ", "#faq"],
+  ...navLinks.slice(0, -1),
+  { n: "§ 4", label: "Early access", href: "/#early-access" },
+  ...navLinks.slice(-1),
 ];
 
 export function MobileMenu() {
@@ -36,12 +37,12 @@ export function MobileMenu() {
       {open && (
         <nav id="mobile-menu" className={styles.menuPanel} aria-label="Mobile">
           <ol>
-            {links.map(([n, label, href]) => (
-              <li key={href}>
-                <a href={href} onClick={() => setOpen(false)}>
-                  <span className={styles.menuNum}>{n}</span>
-                  {label}
-                </a>
+            {links.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} onClick={() => setOpen(false)}>
+                  <span className={styles.menuNum}>{l.n}</span>
+                  {l.label}
+                </Link>
               </li>
             ))}
           </ol>

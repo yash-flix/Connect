@@ -3,9 +3,9 @@ import { Glyph, IsoBox } from "./iso";
 import styles from "./iso.module.css";
 import site from "./site.module.css";
 
-type Step = { n: string; title: string; body: string };
+import type { Step } from "@/lib/content";
 
-// Four stations: inquiry → Connect → calendar → follow-up. Each is centred on
+// Four stations: inquiry → customer record → fact check → calendar. Each is centred on
 // the world diagonal (t, -t), which projects to one horizontal screen line, so
 // the stations read left to right in a level row, each one directly above
 // its step's explanation.
@@ -14,8 +14,8 @@ const SPACING = 2 * STEP * COS30; // the same distance on screen
 const stations = [
   { n: "01", s: 10, h: 5 },
   { n: "02", s: 16, h: 2 },
-  { n: "03", s: 12, h: 3 },
-  { n: "04", s: 10, h: 8 },
+  { n: "03", s: 10, h: 7 },
+  { n: "04", s: 12, h: 3 },
 ].map((st, i) => {
   const t = i * STEP;
   return { ...st, x: t - st.s / 2, y: -t - st.s / 2, cx: t, cy: -t };
@@ -35,7 +35,7 @@ export function FlowScene({ steps }: { steps: Step[] }) {
   const ends = [stations[0], stations[stations.length - 1]].map((s) => project([s.cx, s.cy, 0]));
   const lane = `M${ends[0][0].toFixed(2)} ${ends[0][1].toFixed(2)} L${ends[1][0].toFixed(2)} ${ends[1][1].toFixed(2)}`;
 
-  const [inq, hub, cal, fol] = stations;
+  const [inq, hub, chk, cal] = stations;
   const hubMods = [
     [2, 2, 5],
     [9, 2, 7],
@@ -49,7 +49,7 @@ export function FlowScene({ steps }: { steps: Step[] }) {
         className={styles.svg}
         viewBox={`${vb.x.toFixed(2)} ${vb.y.toFixed(2)} ${vb.w.toFixed(2)} ${vb.h.toFixed(2)}`}
         role="img"
-        aria-label="A lead moves from an inquiry, through Connect, to a booked appointment and a follow-up."
+        aria-label="A customer message moves to the agent, which opens their record, checks its reply against your approved information and books a slot in your calendar."
       >
         {/* Ground lane */}
         <path d={lane} className={styles.path} />
@@ -59,7 +59,7 @@ export function FlowScene({ steps }: { steps: Step[] }) {
           <Glyph id="whatsapp" />
         </IsoBox>
 
-        {/* 02 Connect: a plate with modules */}
+        {/* 02 The agent opens the customer's record: a plate with modules */}
         <IsoBox x={hub.x} y={hub.y} z={0} w={hub.s} d={hub.s} h={hub.h} tone="plate" />
         {hubMods
           .sort((a, b) => a[0] + a[1] - (b[0] + b[1]))
@@ -76,7 +76,12 @@ export function FlowScene({ steps }: { steps: Step[] }) {
             />
           ))}
 
-        {/* 03 Calendar: a slab with a grid and one booked slot */}
+        {/* 03 Fact check: a tall block with a shield */}
+        <IsoBox x={chk.x} y={chk.y} z={0} w={chk.s} d={chk.s} h={chk.h}>
+          <Glyph id="check" />
+        </IsoBox>
+
+        {/* 04 Calendar: a slab with a grid and one booked slot */}
         <IsoBox x={cal.x} y={cal.y} z={0} w={cal.s} d={cal.s} h={cal.h}>
           <g>
             {[0, 1, 2].map((r) =>
@@ -95,11 +100,6 @@ export function FlowScene({ steps }: { steps: Step[] }) {
         </IsoBox>
         <IsoBox x={cal.x + 4.7} y={cal.y + 4.7} z={cal.h} w={2.6} d={2.6} h={2.4} tone="moss" />
 
-        {/* 04 Follow-up: a tall block with a loop */}
-        <IsoBox x={fol.x} y={fol.y} z={0} w={fol.s} d={fol.s} h={fol.h}>
-          <Glyph id="followup" />
-        </IsoBox>
-
         {/* Moving lead */}
         <circle r="1.1" className={styles.packet}>
           <animateMotion dur="6s" repeatCount="indefinite" path={lane} keyPoints="0;0.33;0.33;0.67;0.67;1" keyTimes="0;0.25;0.4;0.65;0.8;1" calcMode="linear" />
@@ -113,6 +113,7 @@ export function FlowScene({ steps }: { steps: Step[] }) {
             <div>
               <h3 className={site.h3}>{st.title}</h3>
               <p className={site.muted}>{st.body}</p>
+              {st.branch && <p className={site.branch}>{st.branch}</p>}
             </div>
           </li>
         ))}

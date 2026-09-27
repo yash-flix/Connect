@@ -3,31 +3,16 @@ import { ChatFigure } from "@/components/ChatFigure";
 import { EarlyAccess } from "@/components/EarlyAccess";
 import { FlowScene } from "@/components/FlowScene";
 import { Glyph } from "@/components/iso";
-import { Logo } from "@/components/Logo";
-import { MobileMenu } from "@/components/MobileMenu";
-import { faqs, rules, steps } from "@/lib/content";
+import { SiteFooter } from "@/components/SiteFooter";
+import { SiteHeader } from "@/components/SiteHeader";
+import { background, faqs, rules, steps } from "@/lib/content";
+import Link from "next/link";
 import styles from "@/components/site.module.css";
 
 export default function Home() {
   return (
     <>
-      <header className={styles.nav}>
-        <div className={styles.navInner}>
-          <a href="#top" aria-label="Connect, home">
-            <Logo />
-          </a>
-          <nav className={styles.navLinks} aria-label="Primary">
-            <a href="#flow">How it works</a>
-            <a href="#agents">Agents</a>
-            <a href="#rules">Control</a>
-            <a href="#faq">FAQ</a>
-          </nav>
-          <a href="#early-access" className={styles.btnPrimary}>
-            Early access
-          </a>
-          <MobileMenu />
-        </div>
-      </header>
+      <SiteHeader />
 
       <main id="top">
         {/* ---------- Hero ---------- */}
@@ -91,24 +76,34 @@ export default function Home() {
             <header className={`${styles.head} ${styles.headSplit}`}>
               <div>
                 <p className={styles.eyebrow}>§ 1 · How it works</p>
-                <h2 className={styles.h2}>From first message to booked visit, in four steps.</h2>
+                <h2 className={styles.h2}>From first message to booked visit, without you lifting a finger.</h2>
               </div>
               <p className={styles.lede}>
-                Every lead follows the same path. Connect handles each step
-                for you, so nobody waits and nobody slips through.
+                Every enquiry follows the same path. The agent replies only
+                from the information you approved, checks itself before
+                sending, and hands you the customer when they’re ready.
               </p>
             </header>
 
             <figure className={styles.flowFigure}>
               <FlowScene steps={steps} />
               <figcaption className={styles.code}>
-                Fig. 2 · Inquiry → Connect → Calendar → Follow-up
+                Fig. 2 · Message → Record → Fact check → Calendar
               </figcaption>
             </figure>
             <p className={styles.note}>
-              Anything outside the rules you set, such as a complaint or an
-              unusual request, is passed to you instead of guessed at.
+              If a reply doesn’t match your information, or someone asks
+              something it doesn’t cover, the agent stops and passes the
+              conversation to you. It never guesses.
             </p>
+            <ul className={styles.runs} aria-label="What runs in the background">
+              {background.map(([k, v]) => (
+                <li key={k}>
+                  <span className={styles.code}>{k}</span>
+                  {v}
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
@@ -118,16 +113,23 @@ export default function Home() {
             <header className={`${styles.head} ${styles.headSplit}`}>
               <div>
                 <p className={styles.eyebrow}>§ 2 · The agents</p>
-                <h2 className={styles.h2}>Eight agents. Install the ones you need.</h2>
+                <h2 className={styles.h2}>Two agents. Eight jobs. Switch on what you need.</h2>
               </div>
               <p className={styles.lede}>
-                Each step above is done by an agent, and each agent does one
-                job. Start with the one that saves you the most time. They
-                share one inbox, calendar and set of rules, so adding another
-                is easy.
+                The WhatsApp agent handles messages and the Voice agent
+                handles calls. Each one does the jobs you switch on, from
+                qualifying and booking to follow-ups. They share one record
+                per customer, one calendar and one set of rules.
               </p>
             </header>
             <AgentPicker />
+            <p className={styles.note}>
+              Start with the WhatsApp agent, then add Voice when you see
+              results.{" "}
+              <Link href="/packages" className={styles.inlineLink}>
+                See the two packages →
+              </Link>
+            </p>
           </div>
         </section>
 
@@ -208,7 +210,17 @@ export default function Home() {
                     <span>{f.q}</span>
                     <span className={styles.faqIcon} aria-hidden="true" />
                   </summary>
-                  <p className={styles.muted}>{f.a}</p>
+                  <p className={styles.muted}>
+                    {f.a}
+                    {f.link && (
+                      <>
+                        {" "}
+                        <Link href={f.link.href} className={styles.inlineLink}>
+                          {f.link.label} →
+                        </Link>
+                      </>
+                    )}
+                  </p>
                 </details>
               ))}
             </div>
@@ -216,34 +228,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className={styles.footer}>
-        <div className={styles.wrap}>
-          <div className={styles.footerHero}>
-            <div className={styles.footerBrand}>
-              <Logo />
-              <p className={styles.muted}>
-                The front desk for businesses that don’t have one.
-              </p>
-            </div>
-            <a href="#early-access" className={styles.btnPrimary}>
-              Get early access
-            </a>
-          </div>
-
-          <div className={styles.footerBase}>
-            <nav className={styles.footerLinks} aria-label="Footer">
-              <a href="#flow">How it works</a>
-              <a href="#agents">Agents</a>
-              <a href="#rules">Control</a>
-              <a href="#faq">FAQ</a>
-            </nav>
-            <span className={styles.code}>© {new Date().getFullYear()} Connect</span>
-            <a href="#top" className={styles.code}>
-              Back to top ↑
-            </a>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import type { AgentId } from "@/lib/content";
+import type { AgentId, ParentId } from "@/lib/content";
 import { boxFaces, bounds, planeMatrix } from "@/lib/iso";
 import styles from "./iso.module.css";
 
@@ -35,9 +35,33 @@ export function IsoBox({ x, y, z, w, d, h, tone = "paper", children, className, 
   );
 }
 
-/** Line-art symbol for each agent, drawn in a 10×10 box. */
-export function Glyph({ id }: { id: AgentId }) {
+export type GlyphId = AgentId | ParentId | "check";
+
+/** Line-art symbol for each agent and job, drawn in a 10×10 box. */
+export function Glyph({ id }: { id: GlyphId }) {
   switch (id) {
+    case "qualify":
+      return (
+        <>
+          <path d="M2.4 3h.8M2.4 5h.8M2.4 7h.8" />
+          <path d="M4.4 3h3.2M4.4 5h3.2M4.4 7h2" />
+          <rect x="2.3" y="2.5" width="1" height="1" className={styles.fill} />
+        </>
+      );
+    case "handoff":
+      return (
+        <>
+          <path d="M2.2 5h4.4M5.2 3.4L6.8 5 5.2 6.6" />
+          <circle cx="7.9" cy="5" r="0.7" className={styles.fill} />
+        </>
+      );
+    case "check":
+      return (
+        <>
+          <path d="M5 2.2l2.6 1v2c0 1.5-1.1 2.5-2.6 3-1.5-.5-2.6-1.5-2.6-3v-2z" />
+          <path d="M3.9 5.1l.8.8 1.5-1.6" />
+        </>
+      );
     case "booking":
       return (
         <>
@@ -96,7 +120,7 @@ export function Glyph({ id }: { id: AgentId }) {
 
 /* ---------- Single module, used as a catalogue icon ---------- */
 
-export function ModuleIcon({ id, on }: { id: AgentId; on: boolean }) {
+export function ModuleIcon({ id, on }: { id: GlyphId; on: boolean }) {
   const h = 5;
   const b = bounds(
     [

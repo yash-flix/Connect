@@ -102,6 +102,17 @@
   max-width: 60ch;
 }
 
+.inlineLink {
+  color: var(--moss);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.inlineLink:hover {
+  color: var(--moss-deep);
+}
+
 /* ---------- Buttons ---------- */
 .btnPrimary,
 .btnGhost {
@@ -487,6 +498,59 @@
   }
   .flowSteps .muted {
     font-size: 14px;
+  }
+}
+
+/* A side exit from a step: where the lead goes when the agent stops. */
+.branch {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 3px 10px;
+  border: 1px dashed var(--ink-2);
+  border-radius: 999px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.branch::before {
+  content: "↳ ";
+}
+
+/* What runs behind every conversation. */
+.runs {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 48px;
+  border-top: 1px solid var(--ink);
+}
+
+.runs li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 15px;
+  color: var(--ink-2);
+}
+
+@media (min-width: 640px) {
+  .runs {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 32px;
+  }
+}
+
+@media (min-width: 960px) {
+  .runs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .runs li {
+    border-bottom: 0;
   }
 }
 
@@ -976,6 +1040,80 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--faint);
+}
+
+/* Parent agents: WhatsApp and Voice, above the jobs they do. */
+.parents {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+@media (min-width: 640px) {
+  .parents {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.parent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  background: var(--card);
+}
+
+.parentHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.parentHead svg {
+  width: 40px;
+  flex: none;
+}
+
+.parentJobs {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--moss);
+}
+
+.parent[data-on="false"] .parentJobs {
+  color: var(--faint);
+}
+
+.jobsLabel {
+  padding-bottom: 12px;
+}
+
+.chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.chips li {
+  padding: 1px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-2);
 }
 
 .toggle {

@@ -1,0 +1,472 @@
+/* ---------- /packages ---------- */
+
+/* Plan cards */
+.plans {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 900px) {
+  .plans {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: clamp(20px, 3vw, 32px);
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  background: var(--card);
+}
+
+.plan[data-plan="growth"] {
+  background: var(--paper-2);
+  border-color: var(--moss);
+  box-shadow: inset 0 3px 0 var(--moss);
+}
+
+.planHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.planName {
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(36px, 4vw, 48px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.planTag {
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+.planList {
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+.planList li {
+  position: relative;
+  padding: 12px 0 12px 26px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.planList li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 19px;
+  width: 10px;
+  height: 5px;
+  border-left: 1.5px solid var(--moss);
+  border-bottom: 1.5px solid var(--moss);
+  transform: rotate(-45deg);
+}
+
+.planLead {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--moss);
+}
+
+.planFoot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.planFoot .bestFor {
+  font-size: 14.5px;
+  color: var(--muted);
+}
+
+/* Architecture figure */
+.arch {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 4vw, 48px) clamp(12px, 4vw, 56px);
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+
+.node,
+.hub {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 12px;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--card);
+  text-align: center;
+}
+
+.node[data-growth] {
+  border-color: var(--moss);
+  background: var(--moss-tint);
+}
+
+.hub {
+  padding: 18px 12px;
+  background: var(--paper-2);
+}
+
+.nodeTitle {
+  display: block;
+  font-size: 15.5px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.nodeSub {
+  display: block;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.archAgents {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.archRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 760px) {
+  .archAgents {
+    gap: clamp(24px, 8vw, 120px);
+    padding: 0 clamp(0px, 6vw, 80px);
+  }
+  .archRow {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Connectors: a line with a dot from each block to the hub. */
+.down,
+.up {
+  position: relative;
+}
+
+.down {
+  padding-bottom: 32px;
+}
+
+.up {
+  padding-top: 32px;
+}
+
+.down::after,
+.up::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 1px;
+  height: 32px;
+  background: var(--ink-2);
+}
+
+.down::after {
+  bottom: 0;
+}
+
+.up::before {
+  top: 0;
+}
+
+@media (max-width: 759px) {
+  /* On phones the 2×2 grid only has room for connectors on the first row. */
+  .archRow > .up:nth-child(n + 3) {
+    padding-top: 0;
+  }
+  .archRow > .up:nth-child(n + 3)::before {
+    display: none;
+  }
+}
+
+.ops {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 32px;
+  padding: 16px;
+  border: 1px dashed var(--faint);
+  border-radius: var(--radius);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend i {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid var(--ink);
+  background: var(--card);
+}
+
+.legend i[data-kind="growth"] {
+  border-color: var(--moss);
+  background: var(--moss-tint);
+}
+
+/* Package flows */
+.flows {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .flows {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.flowCard {
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  background: var(--card);
+  min-width: 0;
+}
+
+.flow {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(16px, 3vw, 28px);
+}
+
+.flowItem {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The arrow between consecutive steps. */
+.flowItem + .flowItem::before {
+  content: "↓";
+  display: block;
+  padding: 4px 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.2;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 10px;
+  align-items: start;
+  padding: 12px 14px;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+
+.step[data-kind="growth"] {
+  border-color: var(--moss);
+  background: var(--moss-tint);
+}
+
+.step[data-kind="decision"] {
+  border-style: dashed;
+  background: var(--paper-2);
+}
+
+.no .step {
+  grid-template-columns: 1fr;
+}
+
+.stepIdx {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--moss);
+  padding-top: 2px;
+}
+
+.tag {
+  align-self: center;
+  padding: 1px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Decision branch: "No" goes to you, "Yes" continues down. */
+.no {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 10px;
+  align-items: center;
+  margin: 6px 0 0 38px;
+}
+
+.noLabel,
+.yesLabel {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.noLabel::after {
+  content: " →";
+}
+
+.yesLabel {
+  grid-column: 1 / -1;
+  margin-left: -38px;
+  text-align: center;
+}
+
+.flowItem:has(.no) + .flowItem::before {
+  content: none;
+}
+
+/* Comparison table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--ink);
+  background: var(--card);
+  font-size: 15px;
+}
+
+.table th,
+.table td {
+  padding: 14px;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table thead th {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom-color: var(--ink);
+}
+
+.table td {
+  width: 24%;
+  color: var(--ink-2);
+}
+
+.table td[data-growth] {
+  background: var(--paper-2);
+}
+
+.tick {
+  color: var(--moss);
+  font-weight: 500;
+}
+
+.dash {
+  color: var(--faint);
+}
+
+@media (max-width: 560px) {
+  .table {
+    font-size: 14px;
+  }
+  .table th,
+  .table td {
+    padding: 12px 8px;
+  }
+  .table td {
+    width: 26%;
+  }
+}
+
+/* What you provide + report */
+.pair {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px 48px;
+}
+
+@media (min-width: 900px) {
+  .pair {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.pairHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.pairTitle {
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 300;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.simpleList {
+  list-style: none;
+}
+
+.simpleList li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 15.5px;
+  color: var(--ink-2);
+}
+
+.simpleList li[data-growth] {
+  color: var(--moss);
+}
+
+.simpleList li[data-growth]::before {
+  content: "+ ";
+}
