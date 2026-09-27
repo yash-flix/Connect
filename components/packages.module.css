@@ -96,11 +96,9 @@
   color: var(--muted);
 }
 
-/* Architecture figure */
-.arch {
-  display: flex;
-  flex-direction: column;
-  padding: clamp(20px, 4vw, 48px) clamp(12px, 4vw, 56px);
+/* Fig. 1: customer → Connect's agents → you */
+.journey {
+  padding: clamp(20px, 4vw, 48px) clamp(12px, 3vw, 40px);
   background-image:
     linear-gradient(var(--rule) 1px, transparent 1px),
     linear-gradient(90deg, var(--rule) 1px, transparent 1px);
@@ -108,261 +106,198 @@
   background-position: -1px -1px;
 }
 
-.node,
-.hub {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 14px 12px;
-  border: 1px solid var(--ink);
-  border-radius: var(--radius);
-  background: var(--card);
-  text-align: center;
+.journeyInner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  align-items: stretch;
 }
 
-.node[data-growth] {
-  border-color: var(--moss);
+@media (min-width: 900px) {
+  .journeyInner {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.15fr) auto minmax(0, 1fr);
+    gap: 14px;
+  }
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--ink);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+/* The middle stage is Connect: the one the eye should land on. */
+.stage[data-tone="accent"] {
+  border-color: var(--moss-deep);
+  background: var(--moss);
+  color: var(--paper);
+  box-shadow: 0 10px 30px -18px rgba(44, 65, 37, 0.8);
+}
+
+.stageHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stageNo {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+}
+
+.stage[data-tone="accent"] .stageNo {
+  background: var(--paper);
+  color: var(--moss-deep);
+}
+
+.stageLabel {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.cards {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.cardIcon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   background: var(--moss-tint);
 }
 
-.hub {
-  padding: 18px 12px;
-  background: var(--paper-2);
+.cardIcon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: var(--moss-deep);
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.nodeTitle {
-  display: block;
+.cardIcon svg [class] {
+  fill: var(--moss-deep);
+  stroke: none;
+}
+
+.cardText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cardTitle {
   font-size: 15.5px;
   font-weight: 500;
   line-height: 1.3;
 }
 
-.nodeSub {
-  display: block;
-  font-size: 13px;
+.cardSub {
+  font-size: 13.5px;
   line-height: 1.4;
   color: var(--muted);
 }
 
-.archAgents {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.archRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-@media (min-width: 760px) {
-  .archAgents {
-    gap: clamp(24px, 8vw, 120px);
-    padding: 0 clamp(0px, 6vw, 80px);
-  }
-  .archRow {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* Connectors: a line with a dot from each block to the hub. */
-.down,
-.up {
-  position: relative;
-}
-
-.down {
-  padding-bottom: 32px;
-}
-
-.up {
-  padding-top: 32px;
-}
-
-.down::after,
-.up::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  width: 1px;
-  height: 32px;
-  background: var(--ink-2);
-}
-
-.down::after {
-  bottom: 0;
-}
-
-.up::before {
-  top: 0;
-}
-
-@media (max-width: 759px) {
-  /* On phones the 2×2 grid only has room for connectors on the first row. */
-  .archRow > .up:nth-child(n + 3) {
-    padding-top: 0;
-  }
-  .archRow > .up:nth-child(n + 3)::before {
-    display: none;
-  }
-}
-
-.ops {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 32px;
-  padding: 16px;
-  border: 1px dashed var(--faint);
-  border-radius: var(--radius);
-}
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 20px;
-}
-
-.legend span {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.legend i {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  border: 1px solid var(--ink);
-  background: var(--card);
-}
-
-.legend i[data-kind="growth"] {
-  border-color: var(--moss);
-  background: var(--moss-tint);
-}
-
-/* Package flows */
-.flows {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  align-items: start;
-}
-
-@media (min-width: 960px) {
-  .flows {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.flowCard {
-  border: 1px solid var(--ink);
-  border-radius: 2px;
-  background: var(--card);
-  min-width: 0;
-}
-
-.flow {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  padding: clamp(16px, 3vw, 28px);
-}
-
-.flowItem {
-  display: flex;
-  flex-direction: column;
-}
-
-/* The arrow between consecutive steps. */
-.flowItem + .flowItem::before {
-  content: "↓";
-  display: block;
-  padding: 4px 0;
-  text-align: center;
-  font-size: 13px;
-  color: var(--ink-2);
-  line-height: 1.2;
-}
-
-.step {
-  display: grid;
-  grid-template-columns: 28px 1fr auto;
-  gap: 10px;
-  align-items: start;
-  padding: 12px 14px;
-  border: 1px solid var(--ink);
-  border-radius: var(--radius);
-  background: var(--card);
-}
-
-.step[data-kind="growth"] {
-  border-color: var(--moss);
-  background: var(--moss-tint);
-}
-
-.step[data-kind="decision"] {
-  border-style: dashed;
-  background: var(--paper-2);
-}
-
-.no .step {
-  grid-template-columns: 1fr;
-}
-
-.stepIdx {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 12px;
-  color: var(--moss);
-  padding-top: 2px;
-}
-
-.tag {
-  align-self: center;
-  padding: 1px 8px;
-  border: 1px solid var(--rule);
+.badge {
+  align-self: start;
+  padding: 2px 8px;
   border-radius: 999px;
+  background: var(--moss);
+  color: var(--paper);
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 10.5px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--muted);
   white-space: nowrap;
 }
 
-/* Decision branch: "No" goes to you, "Yes" continues down. */
-.no {
+.promises {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 2px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(244, 241, 234, 0.25);
+}
+
+.promises li {
+  position: relative;
+  padding-left: 24px;
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+
+.promises li::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 5px;
+  width: 10px;
+  height: 5px;
+  border-left: 1.5px solid var(--paper);
+  border-bottom: 1.5px solid var(--paper);
+  transform: rotate(-45deg);
+}
+
+.arrow {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 6px 10px;
+  place-items: center;
+  align-self: center;
+  justify-self: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  background: var(--card);
+  font-size: 16px;
+  line-height: 1;
+  transform: rotate(90deg);
+}
+
+@media (min-width: 900px) {
+  .arrow {
+    transform: none;
+  }
+}
+
+.legend {
+  display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
-  margin: 6px 0 0 38px;
-}
-
-.noLabel,
-.yesLabel {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.noLabel::after {
-  content: " →";
-}
-
-.yesLabel {
-  grid-column: 1 / -1;
-  margin-left: -38px;
-  text-align: center;
-}
-
-.flowItem:has(.no) + .flowItem::before {
-  content: none;
+  gap: 8px 10px;
 }
 
 /* Comparison table */
@@ -473,14 +408,12 @@
 
 /* ---------- Hindi ---------- */
 /* Room for Devanagari matras, and no tracking. */
-.pairTitle:lang(hi) {
+.pairTitle:lang(hi),
+.stageLabel:lang(hi) {
   line-height: 1.35;
 }
 
 .planLead:lang(hi),
-.tag:lang(hi),
-.noLabel:lang(hi),
-.yesLabel:lang(hi),
 .table thead th:lang(hi) {
   letter-spacing: 0;
 }

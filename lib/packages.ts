@@ -24,49 +24,6 @@ export function getPlans(d: Dictionary): Plan[] {
   return (["core", "growth"] as const).map((id) => ({ id, name: planNames[id], ...d.plans[id] }));
 }
 
-export type FlowStep = {
-  title: string;
-  sub: string;
-  /** "growth" steps exist only in Growth. "decision" steps branch to you. */
-  kind: "both" | "growth" | "decision";
-  /** Where a "No" at a decision goes. */
-  no?: { title: string; sub: string };
-  tag?: string;
-};
-
-type FlowShape = { kind: FlowStep["kind"]; sameAsCore?: boolean };
-
-const coreShape: FlowShape[] = [
-  { kind: "both" },
-  { kind: "both" },
-  { kind: "both" },
-  { kind: "decision" },
-  { kind: "both" },
-  { kind: "both" },
-  { kind: "both" },
-];
-
-const growthShape: FlowShape[] = [
-  { kind: "growth" },
-  { kind: "growth" },
-  { kind: "growth" },
-  { kind: "growth" },
-  { kind: "decision" },
-  { kind: "both", sameAsCore: true },
-  { kind: "both", sameAsCore: true },
-];
-
-function flow(shape: FlowShape[], text: Dictionary["coreFlow"], d: Dictionary): FlowStep[] {
-  return shape.map((s, i) => ({
-    ...text[i],
-    kind: s.kind,
-    tag: s.sameAsCore ? d.packages.flows.sameAsCore : undefined,
-  }));
-}
-
-export const getCoreFlow = (d: Dictionary) => flow(coreShape, d.coreFlow, d);
-export const getGrowthFlow = (d: Dictionary) => flow(growthShape, d.growthFlow, d);
-
 type Cell = boolean | string;
 
 /** Tick (`true`) and dash (`false`) cells; `null` takes the row's text from the dictionary. */

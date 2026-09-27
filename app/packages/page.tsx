@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArchitectureFigure } from "@/components/ArchitectureFigure";
-import { PackageFlow } from "@/components/PackageFlow";
 import { PlanEnquiry } from "@/components/PlanEnquiry";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getDictionary } from "@/lib/i18n/server";
-import { getCoreFlow, getGrowthFlow, getMatrix, getPlans } from "@/lib/packages";
+import { getMatrix, getPlans } from "@/lib/packages";
 import styles from "@/components/site.module.css";
 import pk from "@/components/packages.module.css";
 
@@ -23,7 +22,7 @@ function Cell({ v, t }: { v: boolean | string; t: { included: string; notInclude
 
 export default async function Packages() {
   const d = await getDictionary();
-  const { hero, arch, flows, compare, setup, cta } = d.packages;
+  const { hero, arch, compare, setup, cta } = d.packages;
 
   return (
     <>
@@ -85,24 +84,6 @@ export default async function Packages() {
               <p className={styles.lede}>{arch.lede}</p>
             </header>
             <ArchitectureFigure t={d.arch} />
-          </div>
-        </section>
-
-        {/* ---------- Flows ---------- */}
-        <section id="flows" className={styles.section}>
-          <div className={styles.wrap}>
-            <header className={`${styles.head} ${styles.headSplit}`}>
-              <div>
-                <p className={styles.eyebrow}>{flows.eyebrow}</p>
-                <h2 className={styles.h2}>{flows.title}</h2>
-              </div>
-              <p className={styles.lede}>{flows.lede}</p>
-            </header>
-            <div className={pk.flows}>
-              <PackageFlow fig={flows.coreFig} title={flows.coreTitle} steps={getCoreFlow(d)} labels={flows} />
-              <PackageFlow fig={flows.growthFig} title={flows.growthTitle} steps={getGrowthFlow(d)} labels={flows} />
-            </div>
-            <p className={styles.note}>{flows.note}</p>
           </div>
         </section>
 

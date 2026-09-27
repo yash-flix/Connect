@@ -9,7 +9,6 @@
 
 type Text = { title: string; sub: string };
 type PlanText = { tagline: string; bestFor: string; lead?: string; features: string[] };
-type FlowText = Text & { no?: Text };
 type StepText = { title: string; body: string; branch?: string };
 type FaqText = { q: string; a: string; link?: { href: string; label: string } };
 /** Text for the string cells of the comparison table; tick/dash cells stay in lib/packages.ts. */
@@ -237,32 +236,18 @@ export const en = {
     included: "Included",
     notIncluded: "Not included",
     arch: {
-      eyebrow: "§ 1 · Under the hood",
-      title: "One foundation. Growth switches more of it on.",
+      eyebrow: "§ 1 · How it works",
+      title: "Your customer asks. The agents answer. You get the booking.",
       lede:
-        "The agents talk to your customers. Behind them, one flow keeps a record of every customer, checks every answer against your information, books your calendar and tells you who’s ready.",
-    },
-    flows: {
-      eyebrow: "§ 2 · Step by step",
-      title: "What happens to each enquiry.",
-      lede:
-        "In Core, the customer messages first. In Growth, the Voice agent calls form and ad enquiries straight back, then hands over to the same WhatsApp steps as Core.",
-      coreFig: "Fig. 2 · Core",
-      coreTitle: "A message comes in",
-      growthFig: "Fig. 3 · Growth",
-      growthTitle: "A form is filled in",
-      note: "Growth customers who message on WhatsApp follow the Core flow, routed to the right service’s information.",
-      no: "No",
-      yes: "Yes ↓",
-      sameAsCore: "Same as Core",
+        "Both packages work the same way. Growth adds the Voice agent, which calls new form and ad enquiries straight back.",
     },
     compare: {
-      eyebrow: "§ 3 · Side by side",
+      eyebrow: "§ 2 · Side by side",
       title: "What’s in each package.",
       part: "Part",
     },
     setup: {
-      eyebrow: "§ 4 · Getting started",
+      eyebrow: "§ 3 · Getting started",
       title: "What we need from you, and what you get back.",
       lede:
         "We set everything up and test it with you, including mixed languages and awkward questions, before the first real customer arrives.",
@@ -305,34 +290,6 @@ export const en = {
     } as PlanText,
   },
 
-  coreFlow: [
-    { title: "Customer messages on WhatsApp", sub: "From your ad, website or a listing" },
-    { title: "Open their record", sub: "Found by phone number, or created" },
-    { title: "Draft a reply", sub: "Only from your approved information" },
-    {
-      title: "Does it match your information?",
-      sub: "Every price and number is checked",
-      no: { title: "Passed to you", sub: "You take over the conversation" },
-    },
-    { title: "Qualify the customer", sub: "Needs, budget, timing" },
-    { title: "Book the visit", sub: "A free slot from your calendar" },
-    { title: "Tell you", sub: "Alert with a summary, added to your list" },
-  ] as FlowText[],
-
-  growthFlow: [
-    { title: "Form or ad enquiry", sub: "Tagged with the service, consent given" },
-    { title: "Save and route", sub: "Their record plus the right service’s information" },
-    { title: "Call back in about 2 minutes", sub: "From your business number" },
-    { title: "Qualify by voice", sub: "No prices on calls, every answer saved" },
-    {
-      title: "Happy to continue on WhatsApp?",
-      sub: "The agent asks before messaging",
-      no: { title: "Passed to you", sub: "With a summary of the call" },
-    },
-    { title: "WhatsApp picks up", sub: "“As discussed, here’s the price list…”" },
-    { title: "Book the visit and tell you", sub: "Exactly as in Core" },
-  ] as FlowText[],
-
   matrix: [
     { label: "WhatsApp agent" },
     { label: "Approved information + fact check", core: "1 service", growth: "Up to 3" },
@@ -371,33 +328,40 @@ export const en = {
     ],
   },
 
-  /** Fig. 1 on /packages. Node lists line up with the growth flags in ArchitectureFigure. */
+  /** Fig. 1 on /packages: customer → agents → you. Growth flags live in ArchitectureFigure. */
   arch: {
-    fig: "Fig. 1 · How the packages fit together",
-    oneFoundation: "One foundation",
-    aria: "The WhatsApp agent, and in Growth the Voice agent, connect to one central flow. That flow uses your approved information, one record per customer, hand-offs to you and your calendar. Around it run routing (Growth), monitoring, a basic report, and a full report (Growth).",
-    agents: [
-      { title: "WhatsApp agent", sub: "Replies to messages" },
-      { title: "Voice agent", sub: "Calls new enquiries back" },
-    ] as Text[],
-    hubTitle: "Connect runs the flow",
-    hubSub: "Your setup decides which modules are on",
-    foundation: [
-      { title: "Approved info", sub: "1 or up to 3 services" },
-      { title: "Customer record", sub: "One per customer" },
-      { title: "Hand-off to you", sub: "Alert + summary" },
-      { title: "Calendar", sub: "Visits booked" },
-    ] as Text[],
-    background: "Running in the background",
-    ops: [
-      { title: "Routing", sub: "Right info per service" },
-      { title: "Monitoring", sub: "Alerts if anything breaks" },
-      { title: "Basic report", sub: "Monthly numbers" },
-      { title: "Full report", sub: "+ monthly review call" },
-    ] as Text[],
-    inBoth: "In both packages",
-    growthOnly: "Growth only",
+    fig: "Fig. 1 · How it works for you",
     meta: "Upgrading is a switch, not a rebuild",
+    aria: "Your customer sends a WhatsApp message, or in Growth fills in a form and gets a call back. Connect’s WhatsApp agent replies in seconds and, in Growth, the Voice agent calls back in about two minutes. They answer only from your approved info, remember every customer and pass anything unsure to you. You get a booked visit, a short summary and a monthly report.",
+    customer: {
+      label: "Your customer",
+      items: [
+        { title: "Sends a WhatsApp message", sub: "From your ad, website or a listing" },
+        { title: "Fills in a form or taps an ad", sub: "The Voice agent calls them back" },
+      ] as Text[],
+    },
+    connect: {
+      label: "Connect’s agents",
+      items: [
+        { title: "WhatsApp agent", sub: "Replies in seconds, day or night" },
+        { title: "Voice agent", sub: "Calls back in about 2 minutes" },
+      ] as Text[],
+      promises: [
+        "Answers only from your approved info",
+        "Remembers every customer",
+        "Anything unsure comes to you",
+      ],
+    },
+    you: {
+      label: "You",
+      items: [
+        { title: "A booked visit", sub: "Straight into your calendar" },
+        { title: "A short summary", sub: "Who they are and what they need" },
+        { title: "A monthly report", sub: "Enquiries, replies and bookings" },
+      ] as Text[],
+    },
+    growth: "Growth",
+    growthNote: "Only in Growth. Everything else comes with both packages.",
   },
 
   /** The "Ask about <plan>" modal. */
