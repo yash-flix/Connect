@@ -20,10 +20,7 @@ export default function Home() {
           <div className={styles.wrap}>
             <div className={styles.heroGrid}>
               <div className={styles.heroCopy}>
-                <p className={`${styles.eyebrow} ${styles.rise}`}>
-                  For clinics, salons, studios and home services
-                </p>
-                <h1 className={`${styles.display} ${styles.rise}`} style={{ animationDelay: "0.08s" }}>
+                <h1 className={`${styles.display} ${styles.rise}`}>
                   Never lose a customer{" "}
                   <span className={styles.accent}>because you were busy.</span>
                 </h1>
