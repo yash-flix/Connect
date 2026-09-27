@@ -5,23 +5,26 @@ import { PackageFlow } from "@/components/PackageFlow";
 import { PlanEnquiry } from "@/components/PlanEnquiry";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { coreFlow, growthFlow, matrix, plans, provide, reports } from "@/lib/packages";
+import { getDictionary } from "@/lib/i18n/server";
+import { getCoreFlow, getGrowthFlow, getMatrix, getPlans } from "@/lib/packages";
 import styles from "@/components/site.module.css";
 import pk from "@/components/packages.module.css";
 
-export const metadata: Metadata = {
-  title: "Packages — Connect",
-  description:
-    "Core gives you a WhatsApp agent that replies, qualifies and books. Growth adds a Voice agent that calls new enquiries back within minutes.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { meta } = await getDictionary();
+  return { title: meta.packagesTitle, description: meta.packagesDescription };
+}
 
-function Cell({ v }: { v: boolean | string }) {
-  if (v === true) return <span className={pk.tick}>✓<span className={styles.srOnly}> Included</span></span>;
-  if (v === false) return <span className={pk.dash}>—<span className={styles.srOnly}> Not included</span></span>;
+function Cell({ v, t }: { v: boolean | string; t: { included: string; notIncluded: string } }) {
+  if (v === true) return <span className={pk.tick}>✓<span className={styles.srOnly}> {t.included}</span></span>;
+  if (v === false) return <span className={pk.dash}>—<span className={styles.srOnly}> {t.notIncluded}</span></span>;
   return <>{v}</>;
 }
 
-export default function Packages() {
+export default async function Packages() {
+  const d = await getDictionary();
+  const { hero, arch, flows, compare, setup, cta } = d.packages;
+
   return (
     <>
       <SiteHeader />
@@ -32,24 +35,22 @@ export default function Packages() {
           <div className={styles.wrap}>
             <header className={`${styles.head} ${styles.headSplit}`}>
               <div>
-                <p className={`${styles.eyebrow} ${styles.rise}`}>Packages</p>
+                <p className={`${styles.eyebrow} ${styles.rise}`}>{hero.eyebrow}</p>
                 <h1 className={`${styles.h2} ${styles.rise}`} style={{ animationDelay: "0.08s" }}>
-                  Start with one agent. Add the second when you see results.
+                  {hero.title}
                 </h1>
               </div>
               <p className={`${styles.lede} ${styles.rise}`} style={{ animationDelay: "0.16s" }}>
-                Both packages run on the same foundation. Moving from Core to
-                Growth means switching the Voice agent on and adding your
-                other services. Nothing is rebuilt.
+                {hero.lede}
               </p>
             </header>
 
             <div className={pk.plans}>
-              {plans.map((p) => (
+              {getPlans(d).map((p) => (
                 <article key={p.id} className={pk.plan} data-plan={p.id}>
                   <div className={pk.planHead}>
                     <h2 className={pk.planName}>{p.name}</h2>
-                    <span className={styles.code}>{p.id === "core" ? "Package 1" : "Package 2"}</span>
+                    <span className={styles.code}>{d.packages.packageNo[p.id]}</span>
                   </div>
                   <p className={pk.planTag}>{p.tagline}</p>
                   <div>
@@ -62,10 +63,10 @@ export default function Packages() {
                   </div>
                   <div className={pk.planFoot}>
                     <p className={pk.bestFor}>
-                      <span className={styles.code}>Best for · </span>
+                      <span className={styles.code}>{d.packages.bestFor}</span>
                       {p.bestFor}
                     </p>
-                    <PlanEnquiry plan={p.name} primary={p.id === "growth"} />
+                    <PlanEnquiry plan={p.name} primary={p.id === "growth"} t={d.enquiry} form={d.form} />
                   </div>
                 </article>
               ))}
@@ -78,16 +79,12 @@ export default function Packages() {
           <div className={styles.wrap}>
             <header className={`${styles.head} ${styles.headSplit}`}>
               <div>
-                <p className={styles.eyebrow}>§ 1 · Under the hood</p>
-                <h2 className={styles.h2}>One foundation. Growth switches more of it on.</h2>
+                <p className={styles.eyebrow}>{arch.eyebrow}</p>
+                <h2 className={styles.h2}>{arch.title}</h2>
               </div>
-              <p className={styles.lede}>
-                The agents talk to your customers. Behind them, one flow keeps
-                a record of every customer, checks every answer against your
-                information, books your calendar and tells you who’s ready.
-              </p>
+              <p className={styles.lede}>{arch.lede}</p>
             </header>
-            <ArchitectureFigure />
+            <ArchitectureFigure t={d.arch} />
           </div>
         </section>
 
@@ -96,23 +93,16 @@ export default function Packages() {
           <div className={styles.wrap}>
             <header className={`${styles.head} ${styles.headSplit}`}>
               <div>
-                <p className={styles.eyebrow}>§ 2 · Step by step</p>
-                <h2 className={styles.h2}>What happens to each enquiry.</h2>
+                <p className={styles.eyebrow}>{flows.eyebrow}</p>
+                <h2 className={styles.h2}>{flows.title}</h2>
               </div>
-              <p className={styles.lede}>
-                In Core, the customer messages first. In Growth, the Voice
-                agent calls form and ad enquiries straight back, then hands
-                over to the same WhatsApp steps as Core.
-              </p>
+              <p className={styles.lede}>{flows.lede}</p>
             </header>
             <div className={pk.flows}>
-              <PackageFlow fig="Fig. 2 · Core" title="A message comes in" steps={coreFlow} />
-              <PackageFlow fig="Fig. 3 · Growth" title="A form is filled in" steps={growthFlow} />
+              <PackageFlow fig={flows.coreFig} title={flows.coreTitle} steps={getCoreFlow(d)} labels={flows} />
+              <PackageFlow fig={flows.growthFig} title={flows.growthTitle} steps={getGrowthFlow(d)} labels={flows} />
             </div>
-            <p className={styles.note}>
-              Growth customers who message on WhatsApp follow the Core flow,
-              routed to the right service’s information.
-            </p>
+            <p className={styles.note}>{flows.note}</p>
           </div>
         </section>
 
@@ -121,24 +111,24 @@ export default function Packages() {
           <div className={styles.wrap}>
             <header className={`${styles.head} ${styles.headSplit}`}>
               <div>
-                <p className={styles.eyebrow}>§ 3 · Side by side</p>
-                <h2 className={styles.h2}>What’s in each package.</h2>
+                <p className={styles.eyebrow}>{compare.eyebrow}</p>
+                <h2 className={styles.h2}>{compare.title}</h2>
               </div>
             </header>
             <table className={pk.table}>
               <thead>
                 <tr>
-                  <th scope="col">Part</th>
+                  <th scope="col">{compare.part}</th>
                   <th scope="col">Core</th>
                   <th scope="col">Growth</th>
                 </tr>
               </thead>
               <tbody>
-                {matrix.map(([label, core, growth]) => (
+                {getMatrix(d).map(([label, core, growth]) => (
                   <tr key={label}>
                     <th scope="row">{label}</th>
-                    <td><Cell v={core} /></td>
-                    <td data-growth><Cell v={growth} /></td>
+                    <td><Cell v={core} t={d.packages} /></td>
+                    <td data-growth><Cell v={growth} t={d.packages} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -151,34 +141,30 @@ export default function Packages() {
           <div className={styles.wrap}>
             <header className={`${styles.head} ${styles.headSplit}`}>
               <div>
-                <p className={styles.eyebrow}>§ 4 · Getting started</p>
-                <h2 className={styles.h2}>What we need from you, and what you get back.</h2>
+                <p className={styles.eyebrow}>{setup.eyebrow}</p>
+                <h2 className={styles.h2}>{setup.title}</h2>
               </div>
-              <p className={styles.lede}>
-                We set everything up and test it with you, including mixed
-                languages and awkward questions, before the first real
-                customer arrives.
-              </p>
+              <p className={styles.lede}>{setup.lede}</p>
             </header>
             <div className={pk.pair}>
               <div>
                 <div className={pk.pairHead}>
-                  <h3 className={pk.pairTitle}>You provide</h3>
-                  <span className={styles.code}>+ Growth adds</span>
+                  <h3 className={pk.pairTitle}>{setup.provide}</h3>
+                  <span className={styles.code}>{setup.growthAdds}</span>
                 </div>
                 <ul className={pk.simpleList}>
-                  {provide.core.map((x) => <li key={x}>{x}</li>)}
-                  {provide.growth.map((x) => <li key={x} data-growth>{x}</li>)}
+                  {d.provide.core.map((x) => <li key={x}>{x}</li>)}
+                  {d.provide.growth.map((x) => <li key={x} data-growth>{x}</li>)}
                 </ul>
               </div>
               <div>
                 <div className={pk.pairHead}>
-                  <h3 className={pk.pairTitle}>Your monthly report</h3>
-                  <span className={styles.code}>+ Growth adds</span>
+                  <h3 className={pk.pairTitle}>{setup.report}</h3>
+                  <span className={styles.code}>{setup.growthAdds}</span>
                 </div>
                 <ul className={pk.simpleList}>
-                  {reports.core.map((x) => <li key={x}>{x}</li>)}
-                  {reports.growth.map((x) => <li key={x} data-growth>{x}</li>)}
+                  {d.reports.core.map((x) => <li key={x}>{x}</li>)}
+                  {d.reports.growth.map((x) => <li key={x} data-growth>{x}</li>)}
                 </ul>
               </div>
             </div>
@@ -189,14 +175,14 @@ export default function Packages() {
         <section className={`${styles.section} ${styles.band}`}>
           <div className={`${styles.wrap} ${styles.headSplit}`}>
             <div>
-              <h2 className={styles.h2}>Not sure which one fits?</h2>
+              <h2 className={styles.h2}>{cta.title}</h2>
             </div>
             <div className={styles.ctaRow}>
               <Link href="/#early-access" className={styles.btnPrimary}>
-                Get early access
+                {cta.access}
               </Link>
               <Link href="/#flow" className={styles.btnGhost}>
-                See how it works
+                {cta.flow}
               </Link>
             </div>
           </div>

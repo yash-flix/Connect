@@ -25,10 +25,23 @@
   --iso-plate-front: #dbd4c4;
   --iso-plate-side: #c9c1ad;
 
+  /* Latin faces first; Devanagari (Hindi) falls through to the Noto faces,
+     which only download when a page shows Devanagari text. There is no
+     Devanagari mono, so mono falls back to the sans Devanagari face. */
+  --font-sans: var(--font-sans-latin), var(--font-sans-deva);
+  --font-serif: var(--font-serif-latin), var(--font-serif-deva);
+  --font-mono: var(--font-mono-latin), var(--font-sans-deva);
+
   --radius: 6px;
   --max: 1240px;
   --gutter: clamp(16px, 4.5vw, 56px);
   --section: clamp(80px, 10vw, 136px);
+}
+
+/* In Hindi the mono labels are mostly Devanagari. The mono face's wide spaces
+   pull Devanagari words apart, so the labels switch to the sans face. */
+html[lang="hi"] {
+  --font-mono: var(--font-sans-latin), var(--font-sans-deva);
 }
 
 * {

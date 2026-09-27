@@ -1,4 +1,5 @@
-import { agents, type Agent, type AgentId } from "@/lib/content";
+import type { Agent, AgentId } from "@/lib/content";
+import type { Dictionary } from "@/lib/i18n";
 import { bounds, COS30, planeMatrix, points, project } from "@/lib/iso";
 import { Glyph, IsoBox } from "./iso";
 import styles from "./iso.module.css";
@@ -16,7 +17,6 @@ const PW = M * 2 + 4 * SLOT + 3 * (PITCH - SLOT);
 const PD = ROW1_Y + SLOT + M;
 const LIFT = 11; // how far the "installing" module floats
 
-const CHANNELS = ["WhatsApp", "Calls", "Web forms", "Email"];
 const JACK_Y = [16, 18.5, 21, 23.5];
 
 function slot(i: number) {
@@ -91,15 +91,21 @@ function Module({
 }
 
 type BoardProps = {
+  /** The eight jobs, in slot order, with names in the visitor's language. */
+  agents: Agent[];
   installed: AgentId[];
   /** Agent shown floating above its socket, mid-install. */
   installing?: AgentId;
   /** Callouts, channel cables and labels (the hero figure). */
   annotated?: boolean;
   label: string;
+  /** Words printed on the board. */
+  text: Dictionary["board"];
+  /** Channel names for the cable callouts, in jack order. */
+  channels: string[];
 };
 
-export function Board({ installed, installing, annotated = false, label }: BoardProps) {
+export function Board({ agents, installed, installing, annotated = false, label, text, channels }: BoardProps) {
   const mods = agents.map((a, i) => ({
     agent: a,
     ...slot(i),
@@ -121,7 +127,7 @@ export function Board({ installed, installing, annotated = false, label }: Board
         const ex = project([PW, 0, 0])[0] + 7;
         const ey = sy + 2 + (i - 1.5) * 4.2;
         return {
-          name: CHANNELS[i],
+          name: channels[i],
           d: `M${sx.toFixed(2)} ${sy.toFixed(2)} C${(sx + 6).toFixed(2)} ${(sy + 3).toFixed(2)} ${(ex - 8).toFixed(2)} ${ey.toFixed(2)} ${ex.toFixed(2)} ${ey.toFixed(2)}`,
           end: [ex, ey] as [number, number],
         };
@@ -165,7 +171,7 @@ export function Board({ installed, installing, annotated = false, label }: Board
       labels.push({
         key: m.agent.id,
         text: m.agent.name,
-        sub: m.floating ? "installing" : undefined,
+        sub: m.floating ? text.installing : undefined,
         pos: above ? "above" : "below",
         ...pct(ax, ey),
       });
@@ -315,7 +321,7 @@ export function Board({ installed, installing, annotated = false, label }: Board
           )}
 
           <text x={M} y={PD - 0.9} className={styles.plateText}>
-            CONNECT · BOARD 01 · 8 SOCKETS
+            {text.plate}
           </text>
         </g>
 
@@ -338,10 +344,10 @@ export function Board({ installed, installing, annotated = false, label }: Board
         <IsoBox x={M} y={CORE_Y} z={PH} w={PW - 2 * M} d={CORE_D} h={CORE_H} tone="ink" />
         <g transform={planeMatrix(M, CORE_Y, PH + CORE_H)}>
           <text x="2" y="2.6" className={styles.coreTitle}>
-            CONNECT CORE
+            {text.coreTitle}
           </text>
           <text x="2" y="4.6" className={styles.coreText}>
-            INBOX · CALENDAR · RULES
+            {text.coreText}
           </text>
           {[0, 1, 2].map((i) => (
             <circle

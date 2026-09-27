@@ -2,10 +2,16 @@ import type { FlowStep } from "@/lib/packages";
 import site from "./site.module.css";
 import styles from "./packages.module.css";
 
-type Props = { fig: string; title: string; steps: FlowStep[] };
+type Props = {
+  fig: string;
+  title: string;
+  steps: FlowStep[];
+  /** Branch labels at a decision, e.g. "No" and "Yes ↓". */
+  labels: { no: string; yes: string };
+};
 
 /** A vertical step flow; decision steps branch sideways to a hand-off. */
-export function PackageFlow({ fig, title, steps }: Props) {
+export function PackageFlow({ fig, title, steps, labels }: Props) {
   return (
     <figure className={styles.flowCard}>
       <div className={site.sheetHead}>
@@ -25,14 +31,14 @@ export function PackageFlow({ fig, title, steps }: Props) {
             </div>
             {s.no && (
               <div className={styles.no}>
-                <span className={styles.noLabel}>No</span>
+                <span className={styles.noLabel}>{labels.no}</span>
                 <div className={styles.step} data-kind="decision">
                   <div>
                     <span className={styles.nodeTitle}>{s.no.title}</span>
                     <span className={styles.nodeSub}>{s.no.sub}</span>
                   </div>
                 </div>
-                <span className={styles.yesLabel}>Yes ↓</span>
+                <span className={styles.yesLabel}>{labels.yes}</span>
               </div>
             )}
           </li>

@@ -1,14 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { agents, parents, type AgentId } from "@/lib/content";
+import type { Agent, AgentId, Parent } from "@/lib/content";
+import type { Dictionary } from "@/lib/i18n";
+import { fmt } from "@/lib/i18n/config";
 import { BoardFigure } from "./BoardFigure";
 import { ModuleIcon } from "./iso";
 import styles from "./site.module.css";
 
 const DEFAULT: AgentId[] = ["qualify", "booking", "handoff"];
 
-export function AgentPicker() {
+type Props = {
+  agents: Agent[];
+  parents: Parent[];
+  t: Dictionary["picker"];
+  board: Dictionary["board"];
+  channels: string[];
+};
+
+export function AgentPicker({ agents, parents, t, board, channels }: Props) {
   const [installed, setInstalled] = useState<AgentId[]>(DEFAULT);
 
   const toggle = (id: AgentId) =>
@@ -31,14 +41,14 @@ export function AgentPicker() {
                 <div className={styles.parentHead}>
                   <ModuleIcon id={p.id} on={on} />
                   <div>
-                    <span className={styles.code}>{p.code} · Agent</span>
+                    <span className={styles.code}>{p.code} · {t.agent}</span>
                     <h3 className={styles.entryName}>{p.name}</h3>
                   </div>
                 </div>
                 <p className={styles.entryJob}>{p.job}</p>
                 <p className={styles.parentJobs}>
-                  <span className={styles.code}>Doing now</span>
-                  {on ? jobs.map((a) => a.name).join(" · ") : "Nothing yet"}
+                  <span className={styles.code}>{t.doingNow}</span>
+                  {on ? jobs.map((a) => a.name).join(" · ") : t.nothingYet}
                 </p>
               </li>
             );
@@ -47,7 +57,7 @@ export function AgentPicker() {
 
         {/* The jobs those agents carry out. */}
         <p className={`${styles.code} ${styles.jobsLabel}`}>
-          The jobs they do · switch on what you need
+          {t.jobsLabel}
         </p>
         <ol className={styles.catalogue}>
           {agents.map((a) => {
@@ -62,7 +72,7 @@ export function AgentPicker() {
                   </div>
                   <p className={styles.entryJob}>{a.job}</p>
                   <p className={styles.entryExample}>{a.example}</p>
-                  <ul className={styles.chips} aria-label="Done by">
+                  <ul className={styles.chips} aria-label={t.doneBy}>
                     {a.by.map((id) => (
                       <li key={id}>{parents.find((p) => p.id === id)?.name}</li>
                     ))}
@@ -72,10 +82,10 @@ export function AgentPicker() {
                   type="button"
                   className={styles.toggle}
                   aria-pressed={on}
-                  aria-label={`${on ? "Switch off" : "Switch on"} ${a.name}`}
+                  aria-label={fmt(on ? t.switchOffLabel : t.switchOnLabel, { name: a.name })}
                   onClick={() => toggle(a.id)}
                 >
-                  {on ? "On" : "Switch on"}
+                  {on ? t.on : t.switchOn}
                 </button>
               </li>
             );
@@ -85,18 +95,21 @@ export function AgentPicker() {
 
       <div className={styles.preview} aria-live="polite">
         <BoardFigure
-          fig="Fig. 3 · Your board"
-          status={`${chosen.length} of ${agents.length} jobs on`}
+          fig={t.fig}
+          status={fmt(t.status, { n: chosen.length, total: agents.length })}
+          agents={agents}
           installed={installed}
-          label={`Connect board with ${chosen.length} jobs switched on`}
+          label={fmt(t.boardLabel, { n: chosen.length })}
+          text={board}
+          channels={channels}
           caption={
             chosen.length === 0
-              ? "An empty board. Switch on a job to start."
+              ? t.empty
               : chosen.map((a) => a.name).join(" + ")
           }
           meta={
             <a href="#early-access" className={styles.btnPrimary}>
-              Ask about this setup
+              {t.ask}
             </a>
           }
         />

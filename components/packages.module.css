@@ -470,3 +470,17 @@
 .simpleList li[data-growth]::before {
   content: "+ ";
 }
+
+/* ---------- Hindi ---------- */
+/* Room for Devanagari matras, and no tracking. */
+.pairTitle:lang(hi) {
+  line-height: 1.35;
+}
+
+.planLead:lang(hi),
+.tag:lang(hi),
+.noLabel:lang(hi),
+.yesLabel:lang(hi),
+.table thead th:lang(hi) {
+  letter-spacing: 0;
+}
