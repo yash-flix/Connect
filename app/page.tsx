@@ -5,7 +5,7 @@ import { FlowScene } from "@/components/FlowScene";
 import { Glyph } from "@/components/iso";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { background, faqs, rules, steps } from "@/lib/content";
+import { faqs, rules, steps } from "@/lib/content";
 import Link from "next/link";
 import styles from "@/components/site.module.css";
 
@@ -76,12 +76,11 @@ export default function Home() {
             <header className={`${styles.head} ${styles.headSplit}`}>
               <div>
                 <p className={styles.eyebrow}>§ 1 · How it works</p>
-                <h2 className={styles.h2}>From first message to booked visit, without you lifting a finger.</h2>
+                <h2 className={styles.h2}>From first message to booked visit.</h2>
               </div>
               <p className={styles.lede}>
-                Every enquiry follows the same path. The agent replies only
-                from the information you approved, checks itself before
-                sending, and hands you the customer when they’re ready.
+                The agent replies from your approved info and hands you the
+                customer when they’re ready.
               </p>
             </header>
 
@@ -91,19 +90,6 @@ export default function Home() {
                 Fig. 2 · Message → Record → Fact check → Calendar
               </figcaption>
             </figure>
-            <p className={styles.note}>
-              If a reply doesn’t match your information, or someone asks
-              something it doesn’t cover, the agent stops and passes the
-              conversation to you. It never guesses.
-            </p>
-            <ul className={styles.runs} aria-label="What runs in the background">
-              {background.map(([k, v]) => (
-                <li key={k}>
-                  <span className={styles.code}>{k}</span>
-                  {v}
-                </li>
-              ))}
-            </ul>
           </div>
         </section>
 

@@ -462,6 +462,7 @@
     position: relative;
     grid-template-columns: 1fr;
     justify-items: center;
+    align-content: start;
     gap: 8px;
     padding: 28px clamp(8px, 1.6vw, 24px) 0;
     border-bottom: 0;
@@ -517,41 +518,6 @@
 
 .branch::before {
   content: "↳ ";
-}
-
-/* What runs behind every conversation. */
-.runs {
-  list-style: none;
-  display: grid;
-  grid-template-columns: 1fr;
-  margin-top: 48px;
-  border-top: 1px solid var(--ink);
-}
-
-.runs li {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--rule);
-  font-size: 15px;
-  color: var(--ink-2);
-}
-
-@media (min-width: 640px) {
-  .runs {
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: 32px;
-  }
-}
-
-@media (min-width: 960px) {
-  .runs {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .runs li {
-    border-bottom: 0;
-  }
 }
 
 .stepNum {

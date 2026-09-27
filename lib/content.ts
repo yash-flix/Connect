@@ -124,35 +124,15 @@ export const agents: Agent[] = [
 export type Step = { n: string; title: string; body: string; branch?: string };
 
 export const steps: Step[] = [
-  {
-    n: "01",
-    title: "A customer gets in touch",
-    body: "A message from your ad, your website or a listing, at any hour.",
-  },
-  {
-    n: "02",
-    title: "The agent picks up their history",
-    body: "New or returning, it opens that customer’s record, so nobody repeats themselves.",
-  },
+  { n: "01", title: "A customer messages", body: "From your ad, website or a listing." },
+  { n: "02", title: "The agent recalls them", body: "It opens their record and history." },
   {
     n: "03",
-    title: "It answers from your info, then checks itself",
-    body: "Every price and number is checked against what you approved before it’s sent.",
-    branch: "No match → passed to you",
+    title: "It checks every answer",
+    body: "Replies only from info you approved.",
+    branch: "No match → you",
   },
-  {
-    n: "04",
-    title: "It qualifies, books and tells you",
-    body: "It asks your questions, books a free slot and sends you a summary.",
-  },
-];
-
-/** What runs behind every conversation, whichever agents you use. */
-export const background = [
-  ["Memory", "One record per customer, with the whole conversation."],
-  ["Fact check", "Every price and number is checked before it’s sent."],
-  ["Watching", "We’re alerted the moment anything stops working."],
-  ["Report", "Monthly numbers: enquiries, reply time, bookings, hand-offs."],
+  { n: "04", title: "It books and tells you", body: "Books a slot and sends you a summary." },
 ];
 
 export const rules = [
