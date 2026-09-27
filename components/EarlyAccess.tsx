@@ -3,6 +3,13 @@
 import { useState, type FormEvent } from "react";
 import styles from "./site.module.css";
 
+/** User-facing strings added for form submission, kept here for translation. */
+export const FORM_TEXT = {
+  sending: "Sending…",
+  genericError: "Something went wrong. Please try again.",
+  networkError: "Couldn’t reach the server. Check your connection and try again.",
+} as const;
+
 type Props = {
   /** Package the visitor asked about, when opened from a plan card. */
   plan?: string;
@@ -11,11 +18,36 @@ type Props = {
 
 export function EarlyAccess({ plan, className }: Props = {}) {
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // No backend yet — wire this to your CRM or form service.
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  // Posts to app/api/enquiries/route.ts, which stores the enquiry in MongoDB.
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSent(true);
+    if (submitting) return;
+    setSubmitting(true);
+    setError(null);
+
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+    try {
+      const res = await fetch("/api/enquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, source: plan ? "packages" : "home" }),
+      });
+      if (res.ok) {
+        setSent(true);
+        return;
+      }
+      const json = (await res.json().catch(() => null)) as {
+        error?: string;
+      } | null;
+      setError(json?.error || FORM_TEXT.genericError);
+    } catch {
+      setError(FORM_TEXT.networkError);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (sent) {
@@ -72,8 +104,27 @@ export function EarlyAccess({ plan, className }: Props = {}) {
           placeholder="e.g. Replying to WhatsApp inquiries after hours and chasing people to confirm."
         />
       </label>
-      <button type="submit" className={styles.btnPrimary}>
-        {plan ? `Ask about ${plan}` : "Join early access"}
+      <input
+        className={styles.honeypot}
+        name="company_website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+      />
+      {error && (
+        <p className={styles.formError} role="alert">
+          {error}
+        </p>
+      )}
+      <button
+        type="submit"
+        className={styles.btnPrimary}
+        disabled={submitting}
+        aria-busy={submitting}
+      >
+        {submitting
+          ? FORM_TEXT.sending
+          : plan ? `Ask about ${plan}` : "Join early access"}
       </button>
     </form>
   );

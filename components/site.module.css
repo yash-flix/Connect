@@ -866,6 +866,32 @@
   line-height: 1.2;
 }
 
+.formError {
+  grid-column: 1 / -1;
+  padding: 10px 14px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #9b2c1f;
+  background: var(--card);
+  border: 1px solid #9b2c1f;
+  border-radius: 2px;
+}
+
+.form button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* Spam trap: off-screen but still submitted with the form. */
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
 /* ---------- Enquiry modal ---------- */
 .modal {
   width: min(620px, calc(100vw - 32px));
