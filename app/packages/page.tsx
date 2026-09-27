@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArchitectureFigure } from "@/components/ArchitectureFigure";
 import { PackageFlow } from "@/components/PackageFlow";
+import { PlanEnquiry } from "@/components/PlanEnquiry";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { coreFlow, growthFlow, matrix, plans, provide, reports } from "@/lib/packages";
@@ -64,12 +65,7 @@ export default function Packages() {
                       <span className={styles.code}>Best for · </span>
                       {p.bestFor}
                     </p>
-                    <Link
-                      href="/#early-access"
-                      className={p.id === "growth" ? styles.btnPrimary : styles.btnGhost}
-                    >
-                      Ask about {p.name}
-                    </Link>
+                    <PlanEnquiry plan={p.name} primary={p.id === "growth"} />
                   </div>
                 </article>
               ))}
