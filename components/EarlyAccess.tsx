@@ -1,22 +1,31 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import type { Dictionary } from "@/lib/i18n";
+import { fmt } from "@/lib/i18n/config";
 import styles from "./site.module.css";
 
-/** User-facing strings added for form submission, kept here for translation. */
-export const FORM_TEXT = {
-  sending: "Sending…",
-  genericError: "Something went wrong. Please try again.",
-  networkError: "Couldn’t reach the server. Check your connection and try again.",
-} as const;
+/**
+ * Values stored with the enquiry, in English whatever the page language, so
+ * the database stays consistent. Same order as the dictionary's `types`.
+ */
+const TYPE_VALUES = [
+  "Clinic or wellness",
+  "Salon or studio",
+  "Home services",
+  "Consulting or agency",
+  "Other service business",
+];
 
 type Props = {
   /** Package the visitor asked about, when opened from a plan card. */
   plan?: string;
   className?: string;
+  /** Words for the form, in the visitor's language. */
+  t: Dictionary["form"];
 };
 
-export function EarlyAccess({ plan, className }: Props = {}) {
+export function EarlyAccess({ plan, className, t }: Props) {
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,11 +49,12 @@ export function EarlyAccess({ plan, className }: Props = {}) {
         return;
       }
       const json = (await res.json().catch(() => null)) as {
-        error?: string;
+        field?: string;
       } | null;
-      setError(json?.error || FORM_TEXT.genericError);
+      const field = json?.field as keyof typeof t.errors | undefined;
+      setError(field && field in t.errors ? t.errors[field] : t.errors.body);
     } catch {
-      setError(FORM_TEXT.networkError);
+      setError(t.networkError);
     } finally {
       setSubmitting(false);
     }
@@ -53,11 +63,11 @@ export function EarlyAccess({ plan, className }: Props = {}) {
   if (sent) {
     return (
       <div className={`${styles.formDone} ${className ?? ""}`} role="status">
-        <span className={styles.code}>Received</span>
+        <span className={styles.code}>{t.received}</span>
         <p>
           {plan
-            ? `Thanks. We’ll be in touch about ${plan} and how it would fit your business.`
-            : "Thanks. We’ll reach out to map your lead-to-appointment workflow together."}
+            ? fmt(t.doneWithPlan, { plan })
+            : t.done}
         </p>
       </div>
     );
@@ -66,42 +76,42 @@ export function EarlyAccess({ plan, className }: Props = {}) {
   return (
     <form className={`${styles.form} ${className ?? ""}`} onSubmit={onSubmit}>
       <label className={styles.field}>
-        <span>Your name</span>
+        <span>{t.name}</span>
         <input name="name" required autoComplete="name" />
       </label>
       <label className={styles.field}>
-        <span>Work email</span>
+        <span>{t.email}</span>
         <input name="email" type="email" required autoComplete="email" />
       </label>
       <label className={styles.field}>
-        <span>Business type</span>
+        <span>{t.type}</span>
         <select name="type" defaultValue="">
           <option value="" disabled>
-            Choose one
+            {t.choose}
           </option>
-          <option>Clinic or wellness</option>
-          <option>Salon or studio</option>
-          <option>Home services</option>
-          <option>Consulting or agency</option>
-          <option>Other service business</option>
+          {t.types.map((label, i) => (
+            <option key={TYPE_VALUES[i]} value={TYPE_VALUES[i]}>
+              {label}
+            </option>
+          ))}
         </select>
       </label>
       {plan && (
         <label className={styles.field}>
-          <span>Package</span>
+          <span>{t.plan}</span>
           <select name="plan" defaultValue={plan}>
             <option>Core</option>
             <option>Growth</option>
-            <option>Not sure yet</option>
+            <option value="Not sure yet">{t.notSure}</option>
           </select>
         </label>
       )}
       <label className={`${styles.field} ${styles.fieldWide}`}>
-        <span>What takes up most of your time?</span>
+        <span>{t.task}</span>
         <textarea
           name="task"
           rows={3}
-          placeholder="e.g. Replying to WhatsApp inquiries after hours and chasing people to confirm."
+          placeholder={t.placeholder}
         />
       </label>
       <input
@@ -122,9 +132,7 @@ export function EarlyAccess({ plan, className }: Props = {}) {
         disabled={submitting}
         aria-busy={submitting}
       >
-        {submitting
-          ? FORM_TEXT.sending
-          : plan ? `Ask about ${plan}` : "Join early access"}
+        {submitting ? t.sending : plan ? fmt(t.askAbout, { plan }) : t.join}
       </button>
     </form>
   );

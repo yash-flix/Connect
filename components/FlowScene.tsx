@@ -24,7 +24,7 @@ const stations = [
 const TOP = 15; // headroom above the lane for the tallest block
 const BOTTOM = 10;
 
-export function FlowScene({ steps }: { steps: Step[] }) {
+export function FlowScene({ steps, label }: { steps: Step[]; label: string }) {
   const vb = {
     x: project([stations[0].cx, stations[0].cy, 0])[0] - SPACING / 2,
     y: -TOP,
@@ -49,7 +49,7 @@ export function FlowScene({ steps }: { steps: Step[] }) {
         className={styles.svg}
         viewBox={`${vb.x.toFixed(2)} ${vb.y.toFixed(2)} ${vb.w.toFixed(2)} ${vb.h.toFixed(2)}`}
         role="img"
-        aria-label="A customer message moves to the agent, which opens their record, checks its reply against your approved information and books a slot in your calendar."
+        aria-label={label}
       >
         {/* Ground lane */}
         <path d={lane} className={styles.path} />

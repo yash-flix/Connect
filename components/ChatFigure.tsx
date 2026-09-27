@@ -1,44 +1,30 @@
+import type { Dictionary } from "@/lib/i18n";
 import { Glyph } from "./iso";
 import styles from "./site.module.css";
 
-type Bubble = { from: "them" | "us"; time: string; text: string };
-
-const thread: Bubble[] = [
-  { from: "them", time: "9:40 pm", text: "Hi, are you open Saturday? How much is a first visit?" },
-  {
-    from: "us",
-    time: "9:40 pm",
-    text: "Hi Priya! Yes, 9:00–13:00. A first visit is 45 min. Saturday 10:00 or 11:30 are free. Shall I book one?",
-  },
-  { from: "them", time: "9:41 pm", text: "10:00 please" },
-  { from: "us", time: "9:41 pm", text: "Done. You’re booked for Sat 10:00. I’ll send a reminder on Friday." },
-];
-
-const outcomes = [
-  ["Answered", "Replied in seconds with your hours and prices, while you were off the clock."],
-  ["Booked", "Picked a free slot from your calendar and confirmed it."],
-  ["Reminded", "A reminder goes out the day before, so the visit actually happens."],
-];
+/** Who sent each message in the thread; the words come from the dictionary. */
+const senders = ["them", "us", "them", "us"] as const;
 
 const slots = ["9:00", "10:00", "11:30", "12:15"];
 
 /** Fig. 1: one late-night message, handled end to end. */
-export function ChatFigure() {
+export function ChatFigure({ t }: { t: Dictionary["chat"] }) {
+  const thread = t.thread.map((b, i) => ({ ...b, from: senders[i] }));
   return (
     <figure className={styles.sheet}>
       <span className={styles.crosshairs} aria-hidden="true" />
       <div className={styles.sheetHead}>
-        <span className={styles.code}>Fig. 1 · A 9:40 pm message, handled</span>
-        <span className={styles.code}>You were off the clock</span>
+        <span className={styles.code}>{t.fig}</span>
+        <span className={styles.code}>{t.offClock}</span>
       </div>
 
       <div className={styles.chatFig}>
-        <div className={styles.phone} role="img" aria-label="A customer asks on WhatsApp at 9:40 pm if the business is open Saturday. Connect replies with hours, price and two free slots, the customer picks 10:00, and Connect confirms the booking and schedules a reminder.">
+        <div className={styles.phone} role="img" aria-label={t.aria}>
           <div className={styles.phoneBar} aria-hidden="true">
             <svg viewBox="0 0 10 10">
               <Glyph id="whatsapp" />
             </svg>
-            <span>WhatsApp · Your business</span>
+            <span>{t.phoneBar}</span>
           </div>
           <ol className={styles.thread} aria-hidden="true">
             {thread.map((b, i) => (
@@ -59,7 +45,7 @@ export function ChatFigure() {
             style={{ animationDelay: `${0.5 + thread.length * 0.55}s` }}
             aria-hidden="true"
           >
-            <span className={styles.code}>Sat</span>
+            <span className={styles.code}>{t.day}</span>
             {slots.map((s) => (
               <span key={s} className={styles.slot} data-booked={s === "10:00" || undefined}>
                 {s}
@@ -69,7 +55,7 @@ export function ChatFigure() {
         </div>
 
         <ol className={styles.outcomes}>
-          {outcomes.map(([title, body], i) => (
+          {t.outcomes.map(({ title, body }, i) => (
             <li key={title}>
               <span className={styles.stepNum}>{String(i + 1).padStart(2, "0")}</span>
               <div>
@@ -82,9 +68,9 @@ export function ChatFigure() {
       </div>
 
       <figcaption className={styles.sheetFoot}>
-        <span>No missed message, no back-and-forth, no forgotten booking. That’s the whole idea.</span>
+        <span>{t.foot}</span>
         <span className={styles.sheetMeta}>
-          <span className={styles.code}>Illustration · product in development</span>
+          <span className={styles.code}>{t.meta}</span>
         </span>
       </figcaption>
     </figure>

@@ -1438,3 +1438,132 @@
     margin: -12% 0 -8% -6%;
   }
 }
+
+/* ---------- Language toggle ---------- */
+.lang {
+  display: inline-flex;
+  flex: none;
+  height: 36px;
+  padding: 3px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+
+.lang button {
+  min-width: 30px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Devanagari has no mono face; set the हिं label in the sans at a size that
+   matches the Latin EN beside it. */
+.lang button[data-lang="hi"] {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  letter-spacing: 0;
+}
+
+.lang button:hover {
+  color: var(--ink);
+}
+
+.lang button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+  cursor: default;
+}
+
+.lang[data-pending="true"] {
+  opacity: 0.6;
+}
+
+/* In the header: pushes the button and menu to the right on phones. */
+.navInner > .lang {
+  margin-left: auto;
+}
+
+.navInner > .lang + .btnPrimary {
+  margin-left: 0;
+}
+
+@media (min-width: 860px) {
+  .navInner > .lang {
+    margin-left: 8px;
+  }
+  .navInner > .lang + .btnPrimary {
+    margin-left: -12px;
+  }
+}
+
+/* In the mobile menu: a row under the links. */
+.menuLang {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0 10px;
+  border-top: 1px solid var(--rule);
+}
+
+@media (max-width: 380px) {
+  .navInner > .btnPrimary {
+    padding: 0 11px;
+  }
+}
+
+/* ---------- Hindi ---------- */
+/* Devanagari hangs its matras above and below the line and reads badly with
+   tracking, so Hindi headings get more leading and no letter-spacing. */
+.display:lang(hi) {
+  line-height: 1.24;
+  letter-spacing: 0;
+  max-width: 15ch;
+}
+
+.h2:lang(hi) {
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.modalTitle:lang(hi),
+.formDone p:lang(hi),
+.entryName:lang(hi) {
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+.eyebrow:lang(hi),
+.code:lang(hi),
+.branch:lang(hi),
+.bubbleWho:lang(hi),
+.specRow dt:lang(hi),
+.field:lang(hi),
+.chips li:lang(hi),
+.entryExample:lang(hi)::before {
+  letter-spacing: 0;
+}
+
+/* Small Devanagari needs a touch more size to stay legible. */
+.eyebrow:lang(hi),
+.code:lang(hi),
+.field:lang(hi) {
+  font-size: 12.5px;
+}
+
+.entryExample:lang(hi)::before {
+  content: "जैसे: ";
+}
+
+.slot[data-booked]:lang(hi)::after {
+  content: " · बुक हुआ";
+}

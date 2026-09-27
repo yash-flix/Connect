@@ -2,17 +2,26 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { navLinks } from "@/lib/nav";
+import type { Lang } from "@/lib/i18n/config";
+import type { NavLink } from "@/lib/nav";
+import { LangToggle } from "./LangToggle";
 import styles from "./site.module.css";
 
-// Same links as the header, with early access in its section order before FAQ.
-const links = [
-  ...navLinks.slice(0, -1),
-  { n: "§ 4", label: "Early access", href: "/#early-access" },
-  ...navLinks.slice(-1),
-];
+type Props = {
+  /** Same links as the header, with early access in its section order. */
+  links: NavLink[];
+  lang: Lang;
+  t: {
+    group: string;
+    toEnglish: string;
+    toHindi: string;
+    mobile: string;
+    openMenu: string;
+    closeMenu: string;
+  };
+};
 
-export function MobileMenu() {
+export function MobileMenu({ links, lang, t }: Props) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -32,10 +41,10 @@ export function MobileMenu() {
         onClick={() => setOpen((o) => !o)}
       >
         <span className={styles.menuIcon} data-open={open} aria-hidden="true" />
-        <span className={styles.srOnly}>{open ? "Close menu" : "Open menu"}</span>
+        <span className={styles.srOnly}>{open ? t.closeMenu : t.openMenu}</span>
       </button>
       {open && (
-        <nav id="mobile-menu" className={styles.menuPanel} aria-label="Mobile">
+        <nav id="mobile-menu" className={styles.menuPanel} aria-label={t.mobile}>
           <ol>
             {links.map((l) => (
               <li key={l.href}>
@@ -46,6 +55,10 @@ export function MobileMenu() {
               </li>
             ))}
           </ol>
+          <div className={styles.menuLang}>
+            <span className={styles.code}>{t.group}</span>
+            <LangToggle lang={lang} t={t} />
+          </div>
         </nav>
       )}
     </div>

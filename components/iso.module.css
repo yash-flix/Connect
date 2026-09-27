@@ -307,3 +307,10 @@
 @keyframes blink {
   50% { opacity: 0.25; }
 }
+
+/* Devanagari reads badly with tracking. */
+.callout:lang(hi),
+.plateText:lang(hi),
+.coreText:lang(hi) {
+  letter-spacing: 0;
+}
